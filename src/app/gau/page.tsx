@@ -3,67 +3,140 @@
 import { useEffect, useRef, useState } from "react";
 import { ApiEndPoints } from "../config/apiconfig";
 import AndroidServices from "../services/androidservice";
-import NextVideo from "next-video";
-import { YouTubePlayer } from "react-youtube";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import convert from "@/utils/convetor";
+import Image from "next/image";
+const responsive = {
+  superLargeDesktop: {
+    breakpoint: { max: 4000, min: 3000 },
+    items: 1,
+  },
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+  },
+
+};
+let images = [
+  {
+    path: "/assets/images/1.jpeg",
+  },
+  {
+    path: "/assets/images/2.jpeg",
+  },
+  {
+    path: "/assets/images/3.jpeg",
+  },
+  {
+    path: "/assets/images/4.jpeg",
+  },
+  {
+    path: "/assets/images/5.jpeg",
+  },
+  {
+    path: "/assets/images/6.jpeg",
+  },
+  {
+    path: "/assets/images/7.jpeg",
+  },
+  {
+    path: "/assets/images/8.jpeg",
+  },
+  {
+    path: "/assets/images/9.jpeg",
+  },
+  {
+    path: "/assets/images/10.jpeg",
+  },
+  {
+    path: "/assets/images/11.jpeg",
+  },
+  {
+    path: "/assets/images/12.jpeg",
+  },
+  {
+    path: "/assets/images/13.jpeg",
+  },
+];
 
 const GauImages = () => {
   const [palikaImages, setPalikaImages] = useState<any>();
-  const getImages = async () => {
+  const getVideo = async () => {
     // debugger;
     var response = await AndroidServices.Videos();
     if (response.code == 200) {
       setPalikaImages(response?.data[0]?.link);
     }
   };
-  console.log(palikaImages);
+  const [pdfFile, setPdfFile] = useState<any>();
+  const getPdf = async () => {
+    var response = await AndroidServices.Screens();
+    setPdfFile(response?.badaPatra[0]?.image);
+    let images = convert(ApiEndPoints.api + response?.badaPatra[0]?.image);
+    console.log(images);
+
+    // getImages(response?.badaPatra[0]?.image)
+  };
+  const getImages = async (path: string) => {
+    var response = await AndroidServices.GeneralImages(path);
+    // setPdfFile(response)
+  };
+  console.log(pdfFile?.length);
 
   useEffect(() => {
-    getImages();
+    getVideo();
+    getPdf();
   }, []);
-
 
   return (
     <div className="d-flex col-xl-12 col-lg-12">
-      <div style={{ height: "80vh" }} className="py-2 px-4 ">
-      <video width="720" height="480"  autoPlay={true}
+      <div style={{ height: "100vh" }} className="col-6 ">
+        {/* <video width="720" height="480"  autoPlay={true}
               id="v0"
               preload="preload">
         <source src={palikaImages} type={"video/mp4"} />
-      </video>
+      </video> */}
 
-      {/* <div ref={videoRef}>
-      {load ? (
         <iframe
           width="100%"
-          height="315"
-          src={`https://www.youtube.com/embed/hjJj-9H1-pk?si=uT0FMNkCs-8KE98l`}
+          height="100%"
+          src="https://www.youtube.com/embed/hjJj-9H1-pk?autoplay=1"
           title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-        ></iframe>
-      ) : (
-        <div>Loading...</div>
-      )}
-    </div> */}
-        {/* <iframe
-          width="560"
-          height="315"
-          src="https://www.youtube.com/embed/hjJj-9H1-pk?si=uT0FMNkCs-8KE98l"
-          title="YouTube video player"
-          frameBorder={0}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
-        ></iframe> */}
+        ></iframe>
       </div>
-      <div className="col-6">
-        <iframe
-          src={ApiEndPoints.baseUrl + ""}
+      <div className="col-6 m-0 p-0" style={{ height: "100vh" }}>
+        {/* <iframe
+        contentEditable={false}
+          src={"http://202.51.74.85:6003/get-images/"+pdfFile+"#page=2"}
           title="PDF Viewer"
           width="100%"
           height="100%"
-        />
+        /> */}
+        <div className="bg-primary d-flex justify-content-center ">
+          <span className="text-center text-white">
+            मकालु गाउँपालिका कार्यालयको डिजिटल नागरिक बडापत्र
+          </span>
+        </div>
+
+        {images && images?.length > 0 && (
+          <Carousel
+            arrows={false}
+            autoPlaySpeed={8000}
+            autoPlay
+            responsive={responsive}
+          >
+            {images &&
+              images?.map((item: any, index: number) => (
+                <div key={index}>
+                  <img src={item.path} className="img-fluid" />
+                </div>
+              ))}
+          </Carousel>
+        )}
       </div>
     </div>
   );
