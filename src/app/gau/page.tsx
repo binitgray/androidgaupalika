@@ -131,8 +131,9 @@ console.log(mediaList);
   }, []);
 
   return (
+
     <div className="d-flex col-xl-12 col-lg-12">
-      <div style={{ height: "100vh" }} className="col-6 ">
+      <div style={{ height: "80vh" }} className="col-6 ">
         {/* <img src={mediaList[0].data} width={100} height={100}/> */}
     
 
@@ -146,7 +147,7 @@ console.log(mediaList);
           allowFullScreen
         ></iframe>
       </div>
-      <div className="col-6 m-0 p-0" style={{ height: "100vh" }}>
+      <div className="col-6 m-0 p-0" style={{ height: "80vh" }}>
       
         <div className="bg-primary d-flex justify-content-center ">
           <span className="text-center text-white">

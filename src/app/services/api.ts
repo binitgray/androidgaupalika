@@ -11,7 +11,8 @@ export default API = {
     Setting: ApiEndPoints.api + "/settings",
     Screens: ApiEndPoints.api + "/screens/1",
     Video: ApiEndPoints.api + "/videos/get-all",
-    GeneralImages: ApiEndPoints.api + "/get-images"
+    GeneralImages: ApiEndPoints.api + "/get-images",
+    Weather:"http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/241809?apikey=92qhweritEx8Ag7GIb3VAdg2XGrvEvDp"
 
 
 

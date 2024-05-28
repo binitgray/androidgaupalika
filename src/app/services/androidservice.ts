@@ -1,5 +1,6 @@
 import API from './api';
 import request from '../config/request';
+import { ApiEndPoints } from '../config/apiconfig';
 ;
 interface ApiResponse {
     data?: any;
@@ -24,6 +25,21 @@ class AndroidService {
             }
         }
     }
+    public async Weather(): Promise<any> {
+        try {
+            const res = await (await request()).get(ApiEndPoints.weatherUrl);
+          return await res.data;
+          
+        }
+        catch (error:any) {
+            return {
+                Message: error?.message,
+                code: error?.code,
+                data: null,
+            }
+        }
+    }
+
     public async Screens(): Promise<any> {
         try {
             const res = await (await request()).get(API.Screens);

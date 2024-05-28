@@ -12,3 +12,5 @@ class RequestManager {
 
 }
 export  default  new RequestManager().getRequest;
+
+
