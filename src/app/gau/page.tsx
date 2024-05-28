@@ -6,7 +6,10 @@ import AndroidServices from "../services/androidservice";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import convert from "@/utils/convetor";
-import Image from "next/image";
+import { urlToBase64 } from "../api/base64";
+import { getAllMedia, saveMedia, saveText } from "@/utils/indexdb";
+
+
 const responsive = {
   superLargeDesktop: {
     breakpoint: { max: 4000, min: 3000 },
@@ -82,8 +85,46 @@ const GauImages = () => {
     var response = await AndroidServices.GeneralImages(path);
     // setPdfFile(response)
   };
-  console.log(pdfFile?.length);
 
+  const [imageUrl, setImageUrl] = useState('');
+  const [base64Image, setBase64Image] = useState('');
+    const [mediaList, setMediaList] = useState<any>([]);
+
+    const handleImageUpload = async (event:any) => {
+      // debugger
+
+      // await saveMedia(1,event, 'image');
+      await saveText(2,"hello","text")
+      const media = await getAllMedia();
+      setMediaList(media);
+
+  };
+
+  const getWetherDetail =  async()=>{
+    var response = await axios("")
+  }
+const ConvetToBase64=async()=>{
+//   const imageUrl = 'http://202.51.74.85:6003/get-images//1701490664865.jpg'; 
+//   urlToBase64(imageUrl).then((base64:any) => {
+//     if(imageUrl)
+//     setBase64Image(base64);
+// });
+handleImageUpload("")
+
+}
+
+console.log(mediaList);
+
+  
+    useEffect(() => {
+      ConvetToBase64()
+   
+    }, []);
+    console.log(mediaList[0]?.data);
+    
+   
+
+  
   useEffect(() => {
     getVideo();
     getPdf();
@@ -92,11 +133,8 @@ const GauImages = () => {
   return (
     <div className="d-flex col-xl-12 col-lg-12">
       <div style={{ height: "100vh" }} className="col-6 ">
-        {/* <video width="720" height="480"  autoPlay={true}
-              id="v0"
-              preload="preload">
-        <source src={palikaImages} type={"video/mp4"} />
-      </video> */}
+        {/* <img src={mediaList[0].data} width={100} height={100}/> */}
+    
 
         <iframe
           width="100%"
@@ -109,13 +147,7 @@ const GauImages = () => {
         ></iframe>
       </div>
       <div className="col-6 m-0 p-0" style={{ height: "100vh" }}>
-        {/* <iframe
-        contentEditable={false}
-          src={"http://202.51.74.85:6003/get-images/"+pdfFile+"#page=2"}
-          title="PDF Viewer"
-          width="100%"
-          height="100%"
-        /> */}
+      
         <div className="bg-primary d-flex justify-content-center ">
           <span className="text-center text-white">
             मकालु गाउँपालिका कार्यालयको डिजिटल नागरिक बडापत्र

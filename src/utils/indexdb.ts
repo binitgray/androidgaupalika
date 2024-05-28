@@ -21,6 +21,13 @@ export async function saveMedia(id:number, data:any, type:any) {
   await store.put({ id, data, type });
   await tx.done;
 }
+export async function saveText(id:number, data:any, type:any) {
+  const db = await initDB();
+  const tx = db.transaction(STORE_NAME, 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
+  await store.put({ id, data, type });
+  await tx.done;
+}
 
 export async function getMedia(id:number) {
   const db = await initDB();
