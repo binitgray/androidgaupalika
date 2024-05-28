@@ -9,7 +9,7 @@ export default API = {
 // const Images= BaseUrl+ "get-images/" //image id
 
 Setting:ApiEndPoints.api+"/settings",
-Screens:ApiEndPoints.api+"/screens/2",
+Screens:ApiEndPoints.api+"screens/1",
 Video:ApiEndPoints.api+"videos/get-all",
 GeneralImages:ApiEndPoints.api+"get-images"
 

@@ -10,7 +10,7 @@ interface ApiResponse {
 
 
 class AndroidService {
-    public async Settings(): Promise<ApiResponse> {
+    public async Settings(): Promise<any> {
         try {
             const res = await (await request()).get(API.Setting);
           return await res.data;
@@ -24,7 +24,7 @@ class AndroidService {
             }
         }
     }
-    public async Screens(): Promise<ApiResponse> {
+    public async Screens(): Promise<any> {
         try {
             const res = await (await request()).get(API.Screens);
           return await res.data;
@@ -38,7 +38,7 @@ class AndroidService {
             }
         }
     }
-    public async Videos(): Promise<ApiResponse> {
+    public async Videos(): Promise<any> {
         try {
             const res = await (await request()).get(API.Video);
           return await res.data;
@@ -52,9 +52,9 @@ class AndroidService {
             }
         }
     }
-    public async GeneralImages(): Promise<ApiResponse> {
+    public async GeneralImages(path:string): Promise<any> {
         try {
-            const res = await (await request()).get(API.GeneralImages);
+            const res = await (await request()).get(API.GeneralImages+"/"+path);
           return await res.data;
           
         }
