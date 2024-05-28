@@ -1,4 +1,4 @@
-let Base_URL="http://202.51.74.85:6003/"
+let Base_URL="http://202.51.74.85:6003"
 let Host_URL="https://localhost:3000";
 // let Base_URL="https://localhost:44325"
   //let Base_URL="https://localhost:44325";
