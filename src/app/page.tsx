@@ -92,34 +92,26 @@ export default function Gaupalika() {
   const responsive = {
     superLargeDesktop: {
       // the naming can be any, depends on you.
-      breakpoint: { max: 4000, min: 3000 },
-      items: 3
-    },
-    desktop: {
-      breakpoint: { max: 3000, min: 1024 },
-      items: 3
-    },
-    tablet: {
-      breakpoint: { max: 1024, min: 464 },
+      breakpoint: { max: 4000, min: 1 },
       items: 2
     },
-    mobile: {
-      breakpoint: { max: 464, min: 0 },
-      items: 1
-    }
+
   };
   const [screenData, setScreenData] = useState<any>();
   const [officials, setOfficials] = useState<any>();
+  const [officialSlider, setOfficialSlider] = useState<any>();
+
   const GetScreenData = async () => {
     var resp = await AndroidServices.Screens();
     setScreenData(resp);
     setOfficials(resp.officals)
+    setOfficialSlider(resp.officalSLider);
   };
   useEffect(() => {
     GetScreenData();
   }, [])
   console.log(screenData);
-  console.log(officials, "officials");
+  console.log(officialSlider, "officialslider");
 
 
   return (
@@ -127,8 +119,8 @@ export default function Gaupalika() {
       <Navbar />
       <Scroller />
       <section className="members">
-        <div className="d-flex  align-items-center position-absolute ">
-          <div className="py-2 bg-gray-200 w-[15%] h-full px-6 grid d-flex gap-2 col-3">
+        <div className="d-flex  align-items-center ">
+          <div className="py-2 bg-gray-200 h-full px-6 grid d-flex gap-2 w-20" style={{ width: "20%" }}>
             <div className="">
               <div className="grid grid-cols-5 align-items-center text-sm gap-4 ">
                 <span className="text-[#D01E29] text-lg">
@@ -199,12 +191,12 @@ export default function Gaupalika() {
               <span className="-rotate-90">पदाधिकारिहरु</span>
             </div>
           </div>
-          <div className="d-flex gap-4 ml-2 w-[50vw] justify-between">
-            {officials && officials.length > 0 && officials.map((item: any, index: number) => {
+          <div className="d-flex gap-4 ml-2  justify-between" style={{ width: "42%" }}>
+            {officials && officials?.length > 0 && officials.map((item: any, index: number) => {
               console.log(ApiEndPoints.baseUrl + item?.photo);
 
               return (
-                <div>
+                <div key={index} style={{width:"33.33%"}}>
                   <div className="d-flex gap-2">
                     {item?.photo ?
                       <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} /> : ""
@@ -230,587 +222,33 @@ export default function Gaupalika() {
             })}
 
           </div>
-          <div className="">
-            <div className="">
-              <div className="" >
-
-                <Carousel responsive={responsive}>
-                  <div className="swiper-slide d-flex gap-1" >
+          <div className="slider " style={{ width: "28%" }}>
+            {officialSlider && officialSlider?.length > 0 && <Carousel responsive={responsive} arrows={false} autoPlay autoPlaySpeed={2000}>
+              {officialSlider && officialSlider.map((item: any, index: number) => {
+                return (
+                  <div key={index} className="swiper-slide d-flex gap-1" >
                     <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="योगराज राई" src="http://202.51.74.85:6003/get-images//1701490664865.jpg" />
+                      {item?.photo ?
+                        <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="योगराज राई" src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} /> : ""}
                       <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>योगराज राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा अध्यक्ष</div>
+                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>{item?.name}</div>
+                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>{item?.position}</div>
                         <div className="d-flex relative align-items-center gap-3">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
+                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z"></path>
                           </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६२६५७०३७ </span>
+                          <span className="ml-4 text-base text-primary-red">{item?.contact_number} </span>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="swiper-slide d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="आङबाबु शेर्पा" src="http://202.51.74.85:6003/get-images//1687924503416.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>आङबाबु शेर्पा</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा अध्यक्ष</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९७४२३१३७०८ </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="बाल कुमार तामाङ" src="http://202.51.74.85:6003/get-images//1688135197073.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>बाल कुमार तामाङ</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}> वडा अध्यक्ष</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४०४६६४०६</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="छोपल शेर्पा " src="http://202.51.74.85:6003/get-images//1688135342294.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>छोपल शेर्पा </div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा अध्यक्ष</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६३९९०९२७</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="नरेन्द्र कुमार राई" src="http://202.51.74.85:6003/get-images//1701789612095.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>नरेन्द्र कुमार राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा अध्यक्ष</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४३९३७२९१</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="सविना जैरु" src="http://202.51.74.85:6003/get-images//1701488487959.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>सविना जैरु</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य / कार्यपालिका सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६६२६१९३४</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="बाल कुमारी राई" src="http://202.51.74.85:6003/get-images//1701489438898.jpeg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>बाल कुमारी राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य / कार्यपालिका सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४३९३५७५८</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="कविता वि.क." src="http://202.51.74.85:6003/get-images//1701489033516.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>कविता वि.क.</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य / कार्यपालिका सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४२९८८११४</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide swiper-slide-prev d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="सिता सेति सुरुवाल" src="http://202.51.74.85:6003/get-images//1701490294779.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>सिता सेति सुरुवाल</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य / कार्यपालिका सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९७४२८३३७०९</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide swiper-slide-active d-flex gap-1"  >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="राम बहादुर राई" src="http://202.51.74.85:6003/get-images//1701490261419.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>राम बहादुर राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}> कार्यपालिका सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६२५९३०७९</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide swiper-slide-next d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="डिल्ली राई" src="http://202.51.74.85:6003/get-images//1701489080615.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>डिल्ली राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}> कार्यपालिका सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८५२०९९९६०</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="संगिता दर्जी" src="http://202.51.74.85:6003/get-images//1701489538804.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>संगिता दर्जी</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">
-
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="दिल बहादुर राई" src="http://202.51.74.85:6003/get-images//1701490212995.jpeg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>दिल बहादुर राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६२२०११६८</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="डम्बर बहादुर राई" src="http://202.51.74.85:6003/get-images//1701490182653.jpeg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>डम्बर बहादुर राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४२९६३०७७</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="गिता राई" src="http://202.51.74.85:6003/get-images//1701490118792.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>गिता राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४०४६६४०६</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="सम्भु खालिङ" src="http://202.51.74.85:6003/get-images//1701490097029.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>सम्भु खालिङ</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४०९८७६२६</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="सविन मागर" src="http://202.51.74.85:6003/get-images//1701490065624.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>सविन मागर</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४९०५६१२६</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="पेमा लमु शेर्पा" src="http://202.51.74.85:6003/get-images//1701490037030.jpeg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>पेमा लमु शेर्पा</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९७४२९२७६४४</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="तेम्बा शेर्पा" src="http://202.51.74.85:6003/get-images//1701490015891.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>तेम्बा शेर्पा</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४१२२५१५१</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="सुर्दसन थापा मगर" src="http://202.51.74.85:6003/get-images//1701489991027.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>सुर्दसन थापा मगर</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४९४०९५४२</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="जित बहादुर राई" src="http://202.51.74.85:6003/get-images//1701489929394.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>जित बहादुर राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६३१६७०८४</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="कुसुम तामाङ" src="http://202.51.74.85:6003/get-images//1701489901366.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>कुसुम तामाङ</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४६८९७०२९</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="गिता पराजुली थापा" src="http://202.51.74.85:6003/get-images//1701489837567.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>गिता पराजुली थापा</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९७४९९२७४४९</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="चन्द्र धोज राई" src="http://202.51.74.85:6003/get-images//1701489815419.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>चन्द्र धोज राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४५२६२९८८</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="प्रेम सिं राई" src="http://202.51.74.85:6003/get-images//1701489625203.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>प्रेम सिं राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४९८४२४३४</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="नरेन्द्र बहादुर राई" src="http://202.51.74.85:6003/get-images//1695204925258.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>नरेन्द्र बहादुर राई</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६१०८९४०५</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="दिपक कुमार खम्बु" src="http://202.51.74.85:6003/get-images//1701489600371.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>दिपक कुमार खम्बु</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८६०५३१५९८</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="swiper-slide d-flex gap-1"   >
-                    <div className="d-flex gap-1 mt-1">
-                      <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt="तारा देवि वि क" src="http://202.51.74.85:6003/get-images//1695205053292.jpg" />
-                      <div className="d-flex flex-column gap-1">
-                        <div className=" text-lg whitespace-nowrap font-bold" style={{ margin: "-4px" }}>तारा देवि वि क</div>
-                        <div className=" 2xl:font-bold  text-primary-green whitespace-nowrap overflow-hidden" style={{ margin: "-4px" }}>वडा सदस्य</div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base text-primary-red">९८४७२१३१०६</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Carousel>
-              </div>
-              <div className="swiper-button-prev">
-
-              </div>
-              <div className="swiper-button-next">
-
-              </div>
-              <div className="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal">
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet swiper-pagination-bullet-active">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-                <span className="swiper-pagination-bullet">
-
-                </span>
-              </div>
-            </div>
+                )
+              })}
+            </Carousel>}
           </div>
         </div>
       </section>
+
     </>
   )
 }
