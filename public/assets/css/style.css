@@ -1,4 +1,61 @@
-
-.react-multiple-carousel__arrow .react-multiple-carousel__arrow--left{
-    display: none;
+body {
+    height: 100vh;
+    overflow: hidden;
 }
+
+.slider .react-multi-carousel-list,
+.slider .react-multi-carousel-track,
+.main-slider .react-multi-carousel-track,
+.main-slider .react-multi-carousel-list {
+    height: 100%;
+}
+
+.main-slider .react-multi-carousel-track,
+.main-slider .react-multi-carousel-list {
+    width: 100%;
+}
+
+.color-thm-red {
+    color: #d01e29
+}
+
+.color-thm-green {
+    color: #3a9426
+}
+
+.color-thm-blue {
+    color: #3460b9;
+}
+
+.bg-thm-blue {
+    background-color: #3460b9;
+}
+
+.bg-thm-red {
+    background-color: #d01e29;
+}
+
+.bg-thm-green {
+    background-color: #3a9426;
+}
+
+
+
+
+
+
+.vertical-carousel-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .vertical-carousel-item {
+    transform: translateY(calc(var(--carousel-index) * 100%));
+    transition: transform 0.4s ease-in-out;
+  }
+  
+  .vertical-carousel-item:not(.react-multi-carousel-item--active) {
+    display: none;
+  }
