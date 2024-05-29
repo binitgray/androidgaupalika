@@ -54,6 +54,20 @@ class AndroidService {
             }
         }
     }
+    public async Screens1(): Promise<any> {
+        try {
+            const res = await (await request()).get(API.Screen1);
+          return await res.data;
+          
+        }
+        catch (error:any) {
+            return {
+                Message: error?.message,
+                code: error?.code,
+                data: null,
+            }
+        }
+    }
     public async Videos(): Promise<any> {
         try {
             const res = await (await request()).get(API.Video);

@@ -29,7 +29,7 @@ export default function Navbar() {
       <section className="navbar my-2">
         <div
           className="d-flex align-items-center justify-content-between w-100"
-          style={{ height: "100px" }}
+          style={{ height: "11vh" }}
         >
           <div className="w-20 logo h-50 ">
             <img
