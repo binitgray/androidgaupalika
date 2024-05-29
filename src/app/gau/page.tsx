@@ -6,8 +6,8 @@ import AndroidServices from "../services/androidservice";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import convert from "@/utils/convetor";
-import { urlToBase64 } from "../api/base64";
 import { getAllMedia, saveMedia, saveText } from "@/utils/indexdb";
+import { urlToBase64 } from "../api/base64";
 
 
 const responsive = {
@@ -55,18 +55,12 @@ let images = [
   {
     path: "/assets/images/11.jpeg",
   },
-  {
-    path: "/assets/images/12.jpeg",
-  },
-  {
-    path: "/assets/images/13.jpeg",
-  },
+ 
 ];
 
 const GauImages = () => {
   const [palikaImages, setPalikaImages] = useState<any>();
   const getVideo = async () => {
-    // debugger;
     var response = await AndroidServices.Videos();
     if (response.code == 200) {
       setPalikaImages(response?.data[0]?.link);
@@ -76,47 +70,65 @@ const GauImages = () => {
   const getPdf = async () => {
     var response = await AndroidServices.Screens();
     setPdfFile(response?.badaPatra[0]?.image);
+    ConvetToBase64(response?.badaPatra[0]?.image)
     let images = convert(ApiEndPoints.api + response?.badaPatra[0]?.image);
     console.log(images);
 
     // getImages(response?.badaPatra[0]?.image)
   };
-  const getImages = async (path: string) => {
-    var response = await AndroidServices.GeneralImages(path);
-    // setPdfFile(response)
-  };
 
-  const [imageUrl, setImageUrl] = useState('');
   const [base64Image, setBase64Image] = useState('');
     const [mediaList, setMediaList] = useState<any>([]);
 
     const handleImageUpload = async (event:any) => {
-      // debugger
 
-      // await saveMedia(1,event, 'image');
-      await saveText(2,"hello","text")
+      await saveMedia(13,event, 'wadapatrapdf');
       const media = await getAllMedia();
       setMediaList(media);
 
   };
+  const [wadaPatraImage, setWadaPatraImage] = useState<any>();
+  const getWadaPatraImages=async()=>{
 
-  const getWetherDetail =  async()=>{
-    var response = await axios("")
+    const media = await getAllMedia();
+    let data=media.filter((item:any)=>(item.type=="wadapatra"))
+    setWadaPatraImage(data)
+    console.log(media.filter((item:any)=>{item.type=="wadapatra"}));
+    
+
   }
-const ConvetToBase64=async()=>{
-//   const imageUrl = 'http://202.51.74.85:6003/get-images//1701490664865.jpg'; 
-//   urlToBase64(imageUrl).then((base64:any) => {
-//     if(imageUrl)
-//     setBase64Image(base64);
-// });
-handleImageUpload("")
+
+const ConvetToBase64=async(path:string)=>{
+  const imageUrl ="http://202.51.74.85:6003/get-images/"+ path; 
+  urlToBase64(imageUrl).then((base64:any) => {
+    if(imageUrl)
+    setBase64Image(base64);
+  handleImageUpload(base64)
+});
 
 }
+const [wadapatraPdf,setWadaPatraPdf]=useState<any>()
+const fetchMedia = async () => {
+  setWadaPatraImage([]);
+  // debugger
+
+  const media = await getAllMedia();
+  setMediaList(media);
+  setWadaPatraPdf(media.filter((item: any) => (item.type == "wadapatrapdf")));
+  
+  
+};
+
+console.log(wadapatraPdf,'pdf');
+
+
 
 
   
     useEffect(() => {
-      ConvetToBase64()
+      fetchMedia()
+      getWadaPatraImages()
+      // ConvetToBase64()
    
     }, []);
     
@@ -134,8 +146,9 @@ handleImageUpload("")
       <div style={{ height: "80vh" }} className="col-6 ">
         {/* <img src={mediaList[0].data} width={100} height={100}/> */}
     
+        <video className="mx-2" controls autoPlay src={'/assets/video/himali.mp4'}   width={"100%"} height={"100%"}></video>
 
-        <iframe
+        {/* <iframe
           width="100%"
           height="100%"
           src="https://www.youtube.com/embed/hjJj-9H1-pk?autoplay=1"
@@ -143,7 +156,7 @@ handleImageUpload("")
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
-        ></iframe>
+        ></iframe> */}
       </div>
       <div className="col-6 m-0 p-0" style={{ height: "80vh" }}>
       
@@ -153,17 +166,27 @@ handleImageUpload("")
           </span>
         </div>
 
-        {images && images?.length > 0 && (
+        {/* <iframe
+  src={`http://202.51.74.85:6003/get-images/${wadaPatraImage[0]?.data}#page=2`}  // Change '2' to the page number you want
+  title="PDF Viewer"
+  width="100%"
+  height="100%"
+/> */}
+        {/* <iframe src={ wadaPatraImage[0]?.data} title="PDF Viewer" width="100%" height="100%" /> */}
+
+        {wadaPatraImage && wadaPatraImage?.length > 0 && (
           <Carousel
             arrows={false}
             autoPlaySpeed={8000}
             autoPlay
+            infinite
             responsive={responsive}
           >
-            {images &&
-              images?.map((item: any, index: number) => (
-                <div key={index}>
-                  <img src={item.path} className="img-fluid" />
+            {wadapatraPdf &&
+              wadaPatraImage?.map((item: any, index: number) => (
+                <div key={index} style={{width:"100%", height:"100%"}}>
+
+                  <img src={item.data} className="img-fluid" />
                 </div>
               ))}
           </Carousel>

@@ -22,11 +22,11 @@ export default function Navbar() {
   
   
   useEffect(() => {
-    getWeather();
+    // getWeather();
   }, []);
   return (
     <>
-      <section className="navbar">
+      <section className="navbar my-2">
         <div
           className="d-flex align-items-center justify-content-between w-100"
           style={{ height: "100px" }}

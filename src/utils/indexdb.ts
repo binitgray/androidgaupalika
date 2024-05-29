@@ -46,3 +46,11 @@ export async function getAllMedia() {
   await tx.done;
   return mediaList;
 }
+
+export async function deleteMedia(id:number) {
+  const db = await initDB();
+  const tx = db.transaction(STORE_NAME, 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
+  await store.delete(id);
+  await tx.done;
+}

@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+      <link rel="stylesheet" type="text/css" href="/css/style.css"></link>
       <body className={inter.className}>
         <Navbar/>
         <Scroller/>
