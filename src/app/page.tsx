@@ -116,11 +116,10 @@ export default function Gaupalika() {
 
   return (
     <>
-      <Navbar />
-      <Scroller />
+  
       <section className="members">
-        <div className="d-flex  align-items-center ">
-          <div className="py-2 bg-gray-200 h-full px-6 grid d-flex gap-2 w-20" style={{ width: "20%" }}>
+        <div className="d-flex  align-items-center " style={{ width: "100%" }}>
+          <div className="py-2 bg-gray-200 h-full px-6 grid d-flex gap-2 " style={{ width: "20%" }}>
             <div className="">
               <div className="grid grid-cols-5 align-items-center text-sm gap-4 ">
                 <span className="text-[#D01E29] text-lg">
@@ -191,12 +190,12 @@ export default function Gaupalika() {
               <span className="-rotate-90">पदाधिकारिहरु</span>
             </div>
           </div>
-          <div className="d-flex gap-4 ml-2  justify-between" style={{ width: "42%" }}>
+          <div className="d-flex gap-4   justify-between" style={{ width: "48%" }}>
             {officials && officials?.length > 0 && officials.map((item: any, index: number) => {
               console.log(ApiEndPoints.baseUrl + item?.photo);
 
               return (
-                <div key={index} style={{width:"33.33%"}}>
+                <div key={index} style={{ width: "33.33%" }}>
                   <div className="d-flex gap-2">
                     {item?.photo ?
                       <img className="w-[8vw] h-[10vw] object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} /> : ""
@@ -222,7 +221,7 @@ export default function Gaupalika() {
             })}
 
           </div>
-          <div className="slider " style={{ width: "28%" }}>
+          <div className="slider " style={{ width: "32%" }}>
             {officialSlider && officialSlider?.length > 0 && <Carousel responsive={responsive} arrows={false} autoPlay autoPlaySpeed={2000}>
               {officialSlider && officialSlider.map((item: any, index: number) => {
                 return (
