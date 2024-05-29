@@ -1,12 +1,18 @@
 "use client"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AndroidServices from "../services/androidservice";
 import NepaliDate from "nepali-date-converter";
+import { getAllMedia, saveText } from "@/utils/indexdb";
 
 export default function Navbar() {
-  const getWeather = async () => {
-    var response = await AndroidServices.Weather();
-    console.log(response);
+  const [headerData,setHeaderData]=useState<any>()
+  const getHeader = async () => {
+    var response = await AndroidServices.Screens1();
+    await saveText(14,response?.screenInfo,"headerInfo")
+    const media = await getAllMedia();
+
+
+    setHeaderData(media.filter((item:any)=>item.type=="headerInfo"))
   };
   const date = new Date();
   const hour = date.getHours();
@@ -18,11 +24,12 @@ export default function Navbar() {
     return number.toString().split('').map((digit:any) => nepaliDigits[digit]).join('');
   }
   
+// console.log(headerData &&headerData[0]?.data?.heading_1);
 
   
   
   useEffect(() => {
-    // getWeather();
+    getHeader();
   }, []);
   return (
     <>
@@ -67,27 +74,25 @@ export default function Navbar() {
               className="font-bold "
               style={{ color: "#3460b9", lineHeight: "1.5rem" }}
             >
-              "कृषी, पर्यटन र प्राकृतिक सम्पदा हाम्रो धन, पुर्वाधार सहित
-              सम्बृद्ध मकालु हाम्रो अभियान"
+              {headerData && headerData[0]?.data?.heading_1}
             </label>
             <label
               className="font-bold "
               style={{ color: "#d01e29", lineHeight: "1.5rem" }}
             >
-              ५ नंम्बर बडा कार्यालय, तथा गाउँपालिका साखा कार्यालय{" "}
+               {headerData && headerData[0]?.data?.heading_2}
             </label>
             <label
               className="font-bold "
               style={{ color: "#3460b9", lineHeight: "1.5rem" }}
             >
-              नुम, संखुवासभा, कोशी प्रदेश, नेपाल
+              {headerData && headerData[0]?.data?.heading_3}
             </label>
             <label
               className="font-bold "
               style={{ color: "#d01e29", lineHeight: "1.5rem" }}
             >
-              {" "}
-              बिद्युतिय सूचना पार्टी
+              {headerData && headerData[0]?.data?.heading_4}
             </label>
           </div>
           <div className="d-flex align-items-center gap-2">
