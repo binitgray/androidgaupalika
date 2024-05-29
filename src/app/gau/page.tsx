@@ -113,14 +113,12 @@ handleImageUpload("")
 
 }
 
-console.log(mediaList);
 
   
     useEffect(() => {
       ConvetToBase64()
    
     }, []);
-    console.log(mediaList[0]?.data);
     
    
 
