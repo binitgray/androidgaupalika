@@ -93,7 +93,6 @@ const GauImages = () => {
     const media = await getAllMedia();
     let data=media.filter((item:any)=>(item.type=="wadapatra"))
     setWadaPatraImage(data)
-    console.log(media.filter((item:any)=>{item.type=="wadapatra"}));
     
 
   }
@@ -110,21 +109,12 @@ const ConvetToBase64=async(path:string)=>{
 const [wadapatraPdf,setWadaPatraPdf]=useState<any>()
 const fetchMedia = async () => {
   setWadaPatraImage([]);
-  // debugger
-
   const media = await getAllMedia();
   setMediaList(media);
   setWadaPatraPdf(media.filter((item: any) => (item.type == "wadapatrapdf")));
   
   
-};
-
-console.log(wadapatraPdf,'pdf');
-
-
-
-
-  
+}; 
     useEffect(() => {
       fetchMedia()
       getWadaPatraImages()
@@ -132,9 +122,6 @@ console.log(wadapatraPdf,'pdf');
    
     }, []);
     
-   
-
-  
   useEffect(() => {
     getVideo();
     getPdf();
@@ -182,7 +169,7 @@ console.log(wadapatraPdf,'pdf');
             infinite
             responsive={responsive}
           >
-            {wadapatraPdf &&
+            {wadaPatraImage &&
               wadaPatraImage?.map((item: any, index: number) => (
                 <div key={index} style={{width:"100%", height:"100%"}}>
 

@@ -7,6 +7,7 @@ import { ApiEndPoints } from "./config/apiconfig";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { getAllMedia, saveText } from "@/utils/indexdb";
 
 export default function Gaupalika() {
 
@@ -45,18 +46,26 @@ export default function Gaupalika() {
   const [biniyojanamain, setBiniyojanmain] = useState<any>();
   const [biniyojanasub, setBiniyojansub] = useState<any>();
   const GetScreenData = async () => {
+    // var resp
     var resp = await AndroidServices.Screens1();
+    if(resp){
+
+      await saveText(15,resp,"firstpagedetail")
+    }
+    const media = await getAllMedia();
+    const detail=media.filter((item:any)=>(item.type=="firstpagedetail"))
+
     setScreenData(resp);
-    setOfficials(resp.officals)
-    setOfficialSlider(resp.officalSLider);
-    setMainContain(resp.mainContain);
-    setStaffSlider(resp.staffSLider);
-    setStaff(resp.staff);
-    setNotice(resp.notice);
-    setBiniyojan(resp.biniyojan);
-    setBiniyojanmain(resp.biniyojanamain);
-    setBiniyojansub(resp.biniyojanasub);
-  };
+    setOfficials(detail && detail[0]?.data.officals)
+    setOfficialSlider(detail && detail[0]?.data.officalSLider);
+    setMainContain(detail && detail[0]?.data.mainContain);
+    setStaffSlider(detail && detail[0]?.data.staffSLider);
+    setStaff(detail && detail[0]?.data.staff);
+    setNotice(detail && detail[0]?.data.notice);
+    setBiniyojan(detail && detail[0]?.data.biniyojan);
+    setBiniyojanmain(detail && detail[0]?.data.biniyojanamain);
+    setBiniyojansub(detail && detail[0]?.data.biniyojanasub);
+  };  
   const [settingData, setSettingData] = useState<any>();
   const GetSettingData = async () => {
     var resp = await AndroidServices.Settings();
@@ -67,7 +76,7 @@ export default function Gaupalika() {
     GetScreenData();
     GetSettingData();
   }, [])
-  console.log(screenData, "1");
+  console.log(officials, "1");
   console.log(settingData, "settingdata");
 
 

@@ -8,7 +8,10 @@ export default function Navbar() {
   const [headerData,setHeaderData]=useState<any>()
   const getHeader = async () => {
     var response = await AndroidServices.Screens1();
-    await saveText(14,response?.screenInfo,"headerInfo")
+    if(response){
+      await saveText(14,response?.screenInfo,"headerInfo")
+
+    }
     const media = await getAllMedia();
 
 
@@ -24,7 +27,6 @@ export default function Navbar() {
     return number.toString().split('').map((digit:any) => nepaliDigits[digit]).join('');
   }
   
-// console.log(headerData &&headerData[0]?.data?.heading_1);
 
   
   
