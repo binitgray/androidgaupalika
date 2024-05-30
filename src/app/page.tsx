@@ -35,6 +35,51 @@ export default function Gaupalika() {
     autoplay: true,
     autoplaySpeed: 4000,
   };
+  const generalInfosvg: any = [
+    {
+      svg: <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 640 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z" >
+        </path>
+      </svg >
+    },
+    {
+      svg: <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M496 128v16a8 8 0 0 1-8 8h-24v12c0 6.627-5.373 12-12 12H60c-6.627 0-12-5.373-12-12v-12H24a8 8 0 0 1-8-8v-16a8 8 0 0 1 4.941-7.392l232-88a7.996 7.996 0 0 1 6.118 0l232 88A8 8 0 0 1 496 128zm-24 304H40c-13.255 0-24 10.745-24 24v16a8 8 0 0 0 8 8h464a8 8 0 0 0 8-8v-16c0-13.255-10.745-24-24-24zM96 192v192H60c-6.627 0-12 5.373-12 12v20h416v-20c0-6.627-5.373-12-12-12h-36V192h-64v192h-64V192h-64v192h-64V192H96z">
+
+        </path>
+      </svg>
+    },
+    {
+      svg: <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M544 96H416V32c0-17.7-14.3-32-32-32H192c-17.7 0-32 14.3-32 32v64H32c-17.7 0-32 14.3-32 32v368c0 8.8 7.2 16 16 16h544c8.8 0 16-7.2 16-16V128c0-17.7-14.3-32-32-32zM160 436c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm160 128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm16-170c0 3.3-2.7 6-6 6h-26v26c0 3.3-2.7 6-6 6h-20c-3.3 0-6-2.7-6-6v-26h-26c-3.3 0-6-2.7-6-6v-20c0-3.3 2.7-6 6-6h26V86c0-3.3 2.7-6 6-6h20c3.3 0 6 2.7 6 6v26h26c3.3 0 6 2.7 6 6v20zm144 298c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40z">
+
+        </path>
+      </svg>
+    },
+    {
+      svg: <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06 3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61 3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26 3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25 3.8-8.17 2.44-17.47-3.56-24.26z">
+
+        </path>
+      </svg>
+    },
+    {
+      svg: <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M288 114.96L69.47 307.71c-1.62 1.46-3.69 2.14-5.47 3.35V496c0 8.84 7.16 16 16 16h149.23L192 439.19l104.11-64-60.16-119.22L384 392.75l-104.11 64L319.81 512H496c8.84 0 16-7.16 16-16V311.1c-1.7-1.16-3.72-1.82-5.26-3.2L288 114.96zm282.69 121.32L512 184.45V48c0-8.84-7.16-16-16-16h-64c-8.84 0-16 7.16-16 16v51.69L314.75 10.31C307.12 3.45 297.56.01 288 0s-19.1 3.41-26.7 10.27L5.31 236.28c-6.57 5.91-7.12 16.02-1.21 22.6l21.4 23.82c5.9 6.57 16.02 7.12 22.6 1.21L277.42 81.63c6.05-5.33 15.12-5.33 21.17 0L527.91 283.9c6.57 5.9 16.69 5.36 22.6-1.21l21.4-23.82c5.9-6.57 5.36-16.69-1.22-22.59z">
+
+        </path>
+      </svg>
+    },
+    {
+      index: 6,
+      svg: <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M368 48c8.8 0 16-7.2 16-16V16c0-8.8-7.2-16-16-16H16C7.2 0 0 7.2 0 16v16c0 8.8 7.2 16 16 16h16v156.7C11.8 214.8 0 226.9 0 240c0 67.2 34.6 126.2 86.8 160.5l-21.4 70.2C59.1 491.2 74.5 512 96 512h192c21.5 0 36.9-20.8 30.6-41.3l-21.4-70.2C349.4 366.2 384 307.2 384 240c0-13.1-11.8-25.2-32-35.3V48h16zM80 72c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H88c-4.4 0-8-3.6-8-8V72zm112 200c-77.1 0-139.6-14.3-139.6-32s62.5-32 139.6-32 139.6 14.3 139.6 32-62.5 32-139.6 32z">
+
+        </path>
+      </svg>
+    },
+
+  ]
   const [screenData, setScreenData] = useState<any>();
   const [officials, setOfficials] = useState<any>();
   const [officialSlider, setOfficialSlider] = useState<any>();
@@ -45,15 +90,16 @@ export default function Gaupalika() {
   const [biniyojan, setBiniyojan] = useState<any>();
   const [biniyojanamain, setBiniyojanmain] = useState<any>();
   const [biniyojanasub, setBiniyojansub] = useState<any>();
+  const [generalInfo, setGeneralInfo] = useState<any>()
   const GetScreenData = async () => {
     // var resp
     var resp = await AndroidServices.Screens1();
-    if(resp){
+    if (resp) {
 
-      await saveText(15,resp,"firstpagedetail")
+      await saveText(15, resp, "firstpagedetail")
     }
     const media = await getAllMedia();
-    const detail=media.filter((item:any)=>(item.type=="firstpagedetail"))
+    const detail = media.filter((item: any) => (item.type == "firstpagedetail"))
 
     setScreenData(resp);
     setOfficials(detail && detail[0]?.data.officals)
@@ -65,7 +111,8 @@ export default function Gaupalika() {
     setBiniyojan(detail && detail[0]?.data.biniyojan);
     setBiniyojanmain(detail && detail[0]?.data.biniyojanamain);
     setBiniyojansub(detail && detail[0]?.data.biniyojanasub);
-  };  
+    setGeneralInfo(detail && detail[0]?.data.generalInfo)
+  };
   const [settingData, setSettingData] = useState<any>();
   const GetSettingData = async () => {
     var resp = await AndroidServices.Settings();
@@ -76,10 +123,26 @@ export default function Gaupalika() {
     GetScreenData();
     GetSettingData();
   }, [])
-  console.log(officials, "1");
+  console.log(generalInfo, "1");
   console.log(settingData, "settingdata");
 
-
+  // {Object.entries(screens.generalInfo).map(
+  //   ([key, value]) => {
+  //     return (
+  //       <>
+  //         {key.includes("_display_name") ? (
+  //           <>
+  //             <Text
+  //               style={{ color: Colors.text.secondary }}
+  //             >
+  //               {screens.generalInfo[key]}
+  //             </Text>
+  //           </>
+  //         ) : null}
+  //       </>
+  //     );
+  //   }
+  // )}
 
 
 
@@ -91,72 +154,43 @@ export default function Gaupalika() {
       <section className="members">
         <div className="d-flex  align-items-center h-[18vh]" style={{ width: "100%" }}>
           <div className=" bg-gray-200 h-full ps-6 grid d-flex gap-2 " style={{ width: "20%" }}>
-            <div className=" py-1 d-flex flex-column justify-content-center">
-              <div className="grid grid-cols-5 align-items-center text-sm gap-4 ">
-                <span className="text-[#D01E29] text-lg">
-                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 640 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M96 224c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm448 0c35.3 0 64-28.7 64-64s-28.7-64-64-64-64 28.7-64 64 28.7 64 64 64zm32 32h-64c-17.6 0-33.5 7.1-45.1 18.6 40.3 22.1 68.9 62 75.1 109.4h66c17.7 0 32-14.3 32-32v-32c0-35.3-28.7-64-64-64zm-256 0c61.9 0 112-50.1 112-112S381.9 32 320 32 208 82.1 208 144s50.1 112 112 112zm76.8 32h-8.3c-20.8 10-43.9 16-68.5 16s-47.6-6-68.5-16h-8.3C179.6 288 128 339.6 128 403.2V432c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48v-28.8c0-63.6-51.6-115.2-115.2-115.2zm-223.7-13.4C161.5 263.1 145.6 256 128 256H64c-35.3 0-64 28.7-64 64v32c0 17.7 14.3 32 32 32h65.9c6.3-47.4 34.9-87.3 75.2-109.4z">
+            <div className="d-flex  justify-content-center text-sm gap-4 align-items-center">
 
-                    </path>
-                  </svg>
-                </span>
-                <label className="text-[#D01E29] whitespace-nowrap col-span-2">जनसंख्या </label>
-                <label className="text-[#1ed033] text-right col-span-2">१३४९२</label>
+              <div className="">
+                {generalInfosvg && generalInfosvg?.length > 0 && generalInfosvg.map((item: any, index: number) => {
+                  return (
+                    <span key={index} className="text-[#D01E29] text-lg whitespace-nowrap col-span-2">
+                      {item?.svg}
+                    </span>
+                  )
+                })}
               </div>
-              <div className="grid grid-cols-5 align-items-center text-sm gap-4">
-                <span className="text-[#D01E29] text-lg">
-                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M496 128v16a8 8 0 0 1-8 8h-24v12c0 6.627-5.373 12-12 12H60c-6.627 0-12-5.373-12-12v-12H24a8 8 0 0 1-8-8v-16a8 8 0 0 1 4.941-7.392l232-88a7.996 7.996 0 0 1 6.118 0l232 88A8 8 0 0 1 496 128zm-24 304H40c-13.255 0-24 10.745-24 24v16a8 8 0 0 0 8 8h464a8 8 0 0 0 8-8v-16c0-13.255-10.745-24-24-24zM96 192v192H60c-6.627 0-12 5.373-12 12v20h416v-20c0-6.627-5.373-12-12-12h-36V192h-64v192h-64V192h-64v192h-64V192H96z">
-
-                    </path>
-                  </svg>
-                </span>
-                <label className="text-[#D01E29] whitespace-nowrap col-span-2"> बिद्यालय संख्या</label>
-                <label className="text-[#1ed033] text-right col-span-2">४७</label>
+              <div className="">
+                {generalInfo && Object.entries(generalInfo).map(
+                  ([key, value]) => {
+                    return (
+                      <>
+                        {key.includes("_display_name") ? (
+                          <label className="text-[#D01E29] whitespace-nowrap col-span-2">{generalInfo[key]}</label>
+                        ) : null}
+                      </>
+                    );
+                  }
+                )}
               </div>
-              <div className="grid grid-cols-5 align-items-center text-sm gap-4">
-                <span className="text-[#D01E29] text-lg">
-                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M544 96H416V32c0-17.7-14.3-32-32-32H192c-17.7 0-32 14.3-32 32v64H32c-17.7 0-32 14.3-32 32v368c0 8.8 7.2 16 16 16h544c8.8 0 16-7.2 16-16V128c0-17.7-14.3-32-32-32zM160 436c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm160 128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm16-170c0 3.3-2.7 6-6 6h-26v26c0 3.3-2.7 6-6 6h-20c-3.3 0-6-2.7-6-6v-26h-26c-3.3 0-6-2.7-6-6v-20c0-3.3 2.7-6 6-6h26V86c0-3.3 2.7-6 6-6h20c3.3 0 6 2.7 6 6v26h26c3.3 0 6 2.7 6 6v20zm144 298c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40zm0-128c0 6.6-5.4 12-12 12h-40c-6.6 0-12-5.4-12-12v-40c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v40z">
+              <div className="">
+                {generalInfo && Object.entries(generalInfo).map(
+                  ([key, value]) => {
+                    return (
+                      <>
+                        {key.includes("_count") ? (
+                          <label className="text-[#1ed033] text-right col-span-2 w-100">{generalInfo[key]}</label>
 
-                    </path>
-                  </svg>
-                </span>
-                <label className="text-[#D01E29] whitespace-nowrap col-span-2"> स्वास्थ्य संस्था संख्या</label>
-                <label className="text-[#1ed033] text-right col-span-2">१८ </label>
-              </div>
-              <div className="grid grid-cols-5 align-items-center text-sm gap-4">
-                <span className="text-[#D01E29] text-lg">
-                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M378.31 378.49L298.42 288h30.63c9.01 0 16.98-5 20.78-13.06 3.8-8.04 2.55-17.26-3.28-24.05L268.42 160h28.89c9.1 0 17.3-5.35 20.86-13.61 3.52-8.13 1.86-17.59-4.24-24.08L203.66 4.83c-6.03-6.45-17.28-6.45-23.32 0L70.06 122.31c-6.1 6.49-7.75 15.95-4.24 24.08C69.38 154.65 77.59 160 86.69 160h28.89l-78.14 90.91c-5.81 6.78-7.06 15.99-3.27 24.04C37.97 283 45.93 288 54.95 288h30.63L5.69 378.49c-6 6.79-7.36 16.09-3.56 24.26 3.75 8.05 12 13.25 21.01 13.25H160v24.45l-30.29 48.4c-5.32 10.64 2.42 23.16 14.31 23.16h95.96c11.89 0 19.63-12.52 14.31-23.16L224 440.45V416h136.86c9.01 0 17.26-5.2 21.01-13.25 3.8-8.17 2.44-17.47-3.56-24.26z">
-
-                    </path>
-                  </svg>
-                </span>
-                <label className="text-[#D01E29] whitespace-nowrap col-span-2">सामुदायिक बन संख्या</label>
-                <label className="text-[#1ed033] text-right col-span-2">४०</label>
-              </div>
-              <div className="grid grid-cols-5 align-items-center text-sm gap-4">
-                <span className="text-[#D01E29] text-lg">
-                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M288 114.96L69.47 307.71c-1.62 1.46-3.69 2.14-5.47 3.35V496c0 8.84 7.16 16 16 16h149.23L192 439.19l104.11-64-60.16-119.22L384 392.75l-104.11 64L319.81 512H496c8.84 0 16-7.16 16-16V311.1c-1.7-1.16-3.72-1.82-5.26-3.2L288 114.96zm282.69 121.32L512 184.45V48c0-8.84-7.16-16-16-16h-64c-8.84 0-16 7.16-16 16v51.69L314.75 10.31C307.12 3.45 297.56.01 288 0s-19.1 3.41-26.7 10.27L5.31 236.28c-6.57 5.91-7.12 16.02-1.21 22.6l21.4 23.82c5.9 6.57 16.02 7.12 22.6 1.21L277.42 81.63c6.05-5.33 15.12-5.33 21.17 0L527.91 283.9c6.57 5.9 16.69 5.36 22.6-1.21l21.4-23.82c5.9-6.57 5.36-16.69-1.22-22.59z">
-
-                    </path>
-                  </svg>
-                </span>
-                <label className="text-[#D01E29] whitespace-nowrap col-span-2"> घरधुरी संख्या</label>
-                <label className="text-[#1ed033] text-right col-span-2">३३०९ </label>
-              </div>
-              <div className="grid grid-cols-5 align-items-center text-sm gap-4">
-                <span className="text-[#D01E29] text-lg">
-                  <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 384 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M368 48c8.8 0 16-7.2 16-16V16c0-8.8-7.2-16-16-16H16C7.2 0 0 7.2 0 16v16c0 8.8 7.2 16 16 16h16v156.7C11.8 214.8 0 226.9 0 240c0 67.2 34.6 126.2 86.8 160.5l-21.4 70.2C59.1 491.2 74.5 512 96 512h192c21.5 0 36.9-20.8 30.6-41.3l-21.4-70.2C349.4 366.2 384 307.2 384 240c0-13.1-11.8-25.2-32-35.3V48h16zM80 72c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v16c0 4.4-3.6 8-8 8H88c-4.4 0-8-3.6-8-8V72zm112 200c-77.1 0-139.6-14.3-139.6-32s62.5-32 139.6-32 139.6 14.3 139.6 32-62.5 32-139.6 32z">
-
-                    </path>
-                  </svg>
-                </span>
-                <label className="text-[#D01E29] whitespace-nowrap col-span-2">शौचालय संख्या </label>
-                <label className="text-[#1ed033] text-right col-span-2">३३७४</label>
+                        ) : null}
+                      </>
+                    );
+                  }
+                )}
               </div>
             </div>
             <div className="bg-[#2460B9] text-white d-flex align-items-center  w-[3vw]" style={{ height: "100%" }}>
