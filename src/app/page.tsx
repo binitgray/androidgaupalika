@@ -237,7 +237,7 @@ export default function Gaupalika() {
                       <div className="d-flex flex-column justify-content-between py-2" style={{ width: "60%", height: "100%" }}>
                         <div>
                           <div className=" text-md whitespace-nowrap font-bold " style={{ margin: "-4px", width: "100%" }}>{item?.name}</div>
-                          <div className=" 2xl:font-bold   whitespace-nowrap overflow-hidden color-thm-green" style={{ margin: "-4px" }}>{item?.position}</div>
+                          <div className="   whitespace-nowrap overflow-hidden color-thm-green" style={{ margin: "-4px" }}>{item?.position}</div>
                         </div>
                         <div className="d-flex relative align-items-center gap-3">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
@@ -258,7 +258,7 @@ export default function Gaupalika() {
       </section>
       <section className="main-content">
         <div className="d-flex" style={{ height: "62vh" }}>
-          <div className="d-flex flex-column w-[20vw]">
+          <div className="d-flex flex-column " style={{width:"25%"}}>
             <label className="text-white bg-thm-blue w-100 h-[3vh] d-flex align-items-center justify-content-center">कर्मचारिहरु</label>
             <div className="d-flex h-[59vh]">
               <div className="d-flex flex-col w-[20vw] py-2">
@@ -270,7 +270,7 @@ export default function Gaupalika() {
                         <div className="d-flex flex-column justify-content-between ">
                           <div>
                             <div className=" text-lg whitespace-nowrap font-bold" >{item?.name}</div>
-                            <div className=" 2xl:font-bold  color-thm-green whitespace-nowrap overflow-hidden" >{item?.position}</div>
+                            <div className=" color-thm-green whitespace-nowrap overflow-hidden" >{item?.position}</div>
                           </div>
                           {item?.contact_number &&
                             <div className="d-flex relative align-items-center gap-3">
@@ -302,7 +302,7 @@ export default function Gaupalika() {
                             <div className="d-flex flex-column justify-content-between">
                               <div>
                                 <div className="text-lg whitespace-nowrap font-bold">{item?.name}</div>
-                                <div className="2xl:font-bold color-thm-green whitespace-nowrap overflow-hidden">{item?.position}</div>
+                                <div className=" color-thm-green whitespace-nowrap overflow-hidden">{item?.position}</div>
                               </div>
                               {item?.contact_number && (
                                 <div className="d-flex relative align-items-center gap-3">
@@ -329,7 +329,7 @@ export default function Gaupalika() {
 
             </div>
           </div>
-          <div className="d-flex w-[50vw] main-slider">
+          <div className="d-flex  main-slider " style={{width:"50%"}}>
             {mainContain && mainContain?.length > 0 &&
               <Carousel responsive={responsive1} infinite arrows={false} autoPlay autoPlaySpeed={8000}>
                 {mainContain && mainContain.map((item: any, index: number) => {
@@ -338,7 +338,7 @@ export default function Gaupalika() {
                       <div className="d-flex flex-column h-100">
                         <label style={{ padding: "1px" }} className="d-flex justify-content-center align-items-center font-bold text-white h-[3vh]  bg-thm-blue w-[50vw]">{item?.title}</label>
                         {item?.image ?
-                          <img className="w-100 h-[59vh]" style={{ objectFit: "contain" }} alt={`${item?.title}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.image} /> : ""}
+                          <img className="w-100 h-[59vh] border border-right border-left border-light" style={{ objectFit: "contain" }} alt={`${item?.title}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.image} /> : ""}
                       </div>
                     </div>
                   )
@@ -346,8 +346,8 @@ export default function Gaupalika() {
               </Carousel>
             }
           </div>
-          <div className="w-[30vw] ">
-            <div>
+          <div className=" " style={{width:"25%"}}>
+            <div style={{width:"100%"}}>
               <Carousel responsive={responsive1} autoPlay autoPlaySpeed={8000} infinite arrows={false}>
                 <div className="" data-swiper-slide-index="2" style={{ width: "100%" }}>
                   <div className="d-flex justify-content-center align-items-center">
@@ -460,10 +460,10 @@ export default function Gaupalika() {
             </div>
             <div className=" mx-aauto d-flex flex-column justify-content-center position-absolute w-100 mt-2 swiper-backface-hidden">
               {notice && notice?.length > 0 &&
-                <Carousel responsive={responsive1} arrows={false} autoPlay autoPlaySpeed={8000} infinite>
+                <Carousel responsive={responsive1} arrows={false}  infinite>
                   {notice && notice.map((item: any, index: number) => {
                     return (
-                      <div key={index} className=" d-flex gap-4" data-swiper-slide-index="2" style={{ width: "419px", paddingLeft: "1rem" }}>
+                      <div key={index} className=" d-flex gap-4" data-swiper-slide-index="2" style={{width:"25%", paddingLeft: "1rem" }}>
                         <div className="rounded-sm border my-1">
                           <label className="font-bold text-lg text-center flex justify-content-center bg-thm-red text-white">सूचना सूचना सूचना !!!</label>
                           <p className="break-all text-base p-2 text-black">{item?.content}</p>
@@ -478,7 +478,7 @@ export default function Gaupalika() {
         </div>
       </section>
       <section className="footer">
-        <div className="absolute bottom-0 bg-thm-red flex w-full justify-content-center text-white py-1 h-[4vh] align-items-center z-10"><label>Powered By Encraft Technologies Pvt. Ltd.</label></div>
+        <div className="absolute bottom-0 bg-thm-red flex w-full justify-content-center text-white py-1 h-[4vh] align-items-center z-10"><label>Powered By GrayCode Technology Pvt. Ltd.</label></div>
       </section>
     </>
   )
