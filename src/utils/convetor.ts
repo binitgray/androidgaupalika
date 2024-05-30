@@ -5,26 +5,26 @@ const convert= async(path:any) => {
 
 
   const pdfFilename = `downloaded.pdf`;
-  const pdfPath = path.join(process.cwd(), 'public', pdfFilename);
+  // const pdfPath = path?.join(process.cwd(), 'public', pdfFilename);
 
   try {
-    debugger
-    await downloadPdf(path, pdfPath);
+    
+    // await downloadPdf(path, pdfPath);
 
     const options = {
       density: 100,
       saveFilename: 'converted',
-      savePath: path.join(process.cwd(), 'public', 'images'),
+      // savePath: path?.join(process.cwd(), 'public', 'images'),
       format: 'png',
       width: 600,
       height: 800,
     };
 
-    const images = await pdfToImage(pdfPath, options);
+    // const images = await pdfToImage(pdfPath, options);
 
     // Clean up the downloaded PDF
     // fs.unlinkSync(pdfPath);
-    return images
+    // return images
 
   } catch (error) {
     

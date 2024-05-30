@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react";
+
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import AndroidServices from "./services/androidservice";
@@ -7,11 +7,15 @@ import { ApiEndPoints } from "./config/apiconfig";
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { getAllMedia, saveText } from "@/utils/indexdb";
+import { useEffect, useRef, useState } from "react";
+import convert from "@/utils/convetor";
+import { getAllMedia, saveMedia, saveText } from "@/utils/indexdb";
+// import { urlToBase64 } from "../api/base64";
 import { useRouter } from "next/navigation";
+import { urlToBase64 } from "./api/base64";
+
 
 export default function Gaupalika() {
-
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 1 },
@@ -24,7 +28,17 @@ export default function Gaupalika() {
       items: 1
     },
   };
+  const responsive3 = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1,
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1,
+    },
 
+  };
   const settings = {
     dots: true,
     infinite: true,
@@ -81,6 +95,7 @@ export default function Gaupalika() {
     },
 
   ]
+  const [pageChange, setPageChange] = useState<any>(false);
   const [screenData, setScreenData] = useState<any>();
   const [officials, setOfficials] = useState<any>();
   const [officialSlider, setOfficialSlider] = useState<any>();
@@ -95,8 +110,8 @@ export default function Gaupalika() {
   const GetScreenData = async () => {
     // var resp
     var resp = await AndroidServices.Screens1();
-    if (resp && resp.officals && resp.officalSLider &&resp.mainContain && resp.staffSLider && resp.staff && resp.notice && resp.biniyojan &&resp.biniyojanamain && resp.biniyojanasub && resp.generalInfo) {
-      debugger
+    if (resp && resp.officals && resp.officalSLider && resp.mainContain && resp.staffSLider && resp.staff && resp.notice && resp.biniyojan && resp.biniyojanamain && resp.biniyojanasub && resp.generalInfo) {
+
 
       await saveText(15, resp, "firstpagedetail")
     }
@@ -120,370 +135,453 @@ export default function Gaupalika() {
     var resp = await AndroidServices.Settings();
     setSettingData(resp.data);
   }
-  const router = useRouter()
-  setTimeout(()=>{router.push("/gaupalika") },60*1000)
+
+
+  const [palikaImages, setPalikaImages] = useState<any>();
+  const getVideo = async () => {
+    var response = await AndroidServices.Videos();
+    if (response.code == 200) {
+      setPalikaImages(response?.data[0]?.link);
+    }
+  };
+  const [pdfFile, setPdfFile] = useState<any>();
+  const getPdf = async () => {
+    var response = await AndroidServices.Screens();
+    setPdfFile(response?.badaPatra[0]?.image);
+    ConvetToBase64(response?.badaPatra[0]?.image)
+    let images = convert(ApiEndPoints.api + response?.badaPatra[0]?.image);
+    console.log(images);
+
+    // getImages(response?.badaPatra[0]?.image)
+  };
+
+  const [base64Image, setBase64Image] = useState('');
+  const [mediaList, setMediaList] = useState<any>([]);
+
+  const handleImageUpload = async (event: any) => {
+
+    await saveMedia(13, event, 'wadapatrapdf');
+    const media = await getAllMedia();
+    setMediaList(media);
+
+  };
+  const [wadaPatraImage, setWadaPatraImage] = useState<any>();
+  const getWadaPatraImages = async () => {
+
+    const media = await getAllMedia();
+    let data = media.filter((item: any) => (item.type == "wadapatra"))
+    setWadaPatraImage(data)
+
+
+  }
+
+  const ConvetToBase64 = async (path: string) => {
+    const imageUrl = "http://202.51.74.85:6003/get-images/" + path;
+    urlToBase64(imageUrl).then((base64: any) => {
+      if (imageUrl)
+        setBase64Image(base64);
+      handleImageUpload(base64)
+    });
+
+  }
+  const [wadapatraPdf, setWadaPatraPdf] = useState<any>()
+  const [youtubeVideo, setYoutubeVideo] = useState<any>()
+  const fetchMedia = async () => {
+    setWadaPatraImage([]);
+    const media = await getAllMedia();
+    setMediaList(media);
+    setYoutubeVideo(media.filter((item: any) => (item.type == "youtube")))
+    setWadaPatraPdf(media.filter((item: any) => (item.type == "wadapatrapdf")));
+
+
+  };
+
+  useEffect(() => {
+    fetchMedia()
+    getWadaPatraImages()
+  }, []);
+
+  useEffect(() => {
+    getVideo();
+    getPdf();
+  }, []);
+
 
   useEffect(() => {
     GetScreenData();
     GetSettingData();
   }, [])
-  console.log(generalInfo, "1");
-  console.log(settingData, "settingdata");
 
-  // {Object.entries(screens.generalInfo).map(
-  //   ([key, value]) => {
-  //     return (
-  //       <>
-  //         {key.includes("_display_name") ? (
-  //           <>
-  //             <Text
-  //               style={{ color: Colors.text.secondary }}
-  //             >
-  //               {screens.generalInfo[key]}
-  //             </Text>
-  //           </>
-  //         ) : null}
-  //       </>
-  //     );
-  //   }
-  // )}
-
-
-
-
+  setTimeout(() => { setPageChange(!pageChange) }, 60 * 1000)
 
   return (
     <>
+      {(pageChange == false) &&
+        <div>
+          <section className="members">
+            <div className="d-flex  align-items-center h-[18vh]" style={{ width: "100%" }}>
+              <div className=" bg-gray-200 h-full ps-6 grid d-flex gap-2 " style={{ width: "20%" }}>
+                <div className="d-flex  justify-content-center text-sm gap-4 align-items-center">
 
-      <section className="members">
-        <div className="d-flex  align-items-center h-[18vh]" style={{ width: "100%" }}>
-          <div className=" bg-gray-200 h-full ps-6 grid d-flex gap-2 " style={{ width: "20%" }}>
-            <div className="d-flex  justify-content-center text-sm gap-4 align-items-center">
+                  <div className="">
+                    {generalInfosvg && generalInfosvg?.length > 0 && generalInfosvg.map((item: any, index: number) => {
+                      return (
+                        <span key={index} className="text-[#D01E29] text-lg whitespace-nowrap col-span-2">
+                          {item?.svg}
+                        </span>
+                      )
+                    })}
+                  </div>
+                  <div className="">
+                    {generalInfo && Object.entries(generalInfo).map(
+                      ([key, value]) => {
+                        return (
+                          <>
+                            {key.includes("_display_name") ? (
+                              <label className="text-[#D01E29] whitespace-nowrap col-span-2">{generalInfo[key]}</label>
+                            ) : null}
+                          </>
+                        );
+                      }
+                    )}
+                  </div>
+                  <div className="">
+                    {generalInfo && Object.entries(generalInfo).map(
+                      ([key, value]) => {
+                        return (
+                          <>
+                            {key.includes("_count") ? (
+                              <label className="text-[#1ed033] text-right col-span-2 w-100">{generalInfo[key]}</label>
 
-              <div className="">
-                {generalInfosvg && generalInfosvg?.length > 0 && generalInfosvg.map((item: any, index: number) => {
+                            ) : null}
+                          </>
+                        );
+                      }
+                    )}
+                  </div>
+                </div>
+                <div className="bg-[#2460B9] text-white d-flex align-items-center  w-[3vw]" style={{ height: "100%" }}>
+                  <span className="-rotate-90" style={{ margin: "0 -1.5rem", fontSize: "19px" }}>पदाधिकारिहरु</span>
+                </div>
+              </div>
+              <div className="d-flex   justify-content-between" style={{ width: "48%", height: "100%" }}>
+                {officials && officials?.length > 0 && officials.map((item: any, index: number) => {
                   return (
-                    <span key={index} className="text-[#D01E29] text-lg whitespace-nowrap col-span-2">
-                      {item?.svg}
-                    </span>
+                    <div key={index} style={{ width: "33.33%", height: "100%" }}>
+                      <div className="d-flex gap-2 h-100" >
+                        {item?.photo ?
+                          <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} /> : <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.hostUrl + "assets/images/profile.jpg"} />
+                        }
+                        <div className="d-flex flex-column justify-content-between py-2" style={{ width: "60%", height: "100%" }}>
+                          <div>
+                            <div className=" text-md  font-bold text-wrap " style={{ margin: "-4px", width: "100%" }}>{item?.name}</div>
+                            <div className="  color-thm-green" style={{ margin: "-4px" }}>{item?.position}</div>
+                          </div>
+                          <div className="d-flex relative align-items-center gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
+                              <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
+
+                              </path>
+                            </svg>
+                            <span className="ml-4 text-base color-thm-red color-thm-red">{item?.contact_number}</span>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
                   )
                 })}
               </div>
-              <div className="">
-                {generalInfo && Object.entries(generalInfo).map(
-                  ([key, value]) => {
+              <div className="slider " style={{ width: "32%", height: "100%" }}>
+                {officialSlider && officialSlider?.length > 0 && <Carousel responsive={responsive} arrows={false} autoPlay autoPlaySpeed={4000} infinite>
+                  {officialSlider && officialSlider.map((item: any, index: number) => {
                     return (
-                      <>
-                        {key.includes("_display_name") ? (
-                          <label className="text-[#D01E29] whitespace-nowrap col-span-2">{generalInfo[key]}</label>
-                        ) : null}
-                      </>
-                    );
-                  }
-                )}
-              </div>
-              <div className="">
-                {generalInfo && Object.entries(generalInfo).map(
-                  ([key, value]) => {
-                    return (
-                      <>
-                        {key.includes("_count") ? (
-                          <label className="text-[#1ed033] text-right col-span-2 w-100">{generalInfo[key]}</label>
-
-                        ) : null}
-                      </>
-                    );
-                  }
-                )}
-              </div>
-            </div>
-            <div className="bg-[#2460B9] text-white d-flex align-items-center  w-[3vw]" style={{ height: "100%" }}>
-              <span className="-rotate-90" style={{ margin: "0 -1.5rem", fontSize: "19px" }}>पदाधिकारिहरु</span>
-            </div>
-          </div>
-          <div className="d-flex   justify-content-between" style={{ width: "48%", height: "100%" }}>
-            {officials && officials?.length > 0 && officials.map((item: any, index: number) => {
-              return (
-                <div key={index} style={{ width: "33.33%", height: "100%" }}>
-                  <div className="d-flex gap-2 h-100" >
-                    {item?.photo ?
-                      <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} /> : <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.hostUrl + "assets/images/profile.jpg"} />
-                    }
-                    <div className="d-flex flex-column justify-content-between py-2" style={{ width: "60%", height: "100%" }}>
-                      <div>
-                        <div className=" text-md  font-bold text-wrap " style={{ margin: "-4px", width: "100%" }}>{item?.name}</div>
-                        <div className="  color-thm-green" style={{ margin: "-4px" }}>{item?.position}</div>
-                      </div>
-                      <div className="d-flex relative align-items-center gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                          <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                          </path>
-                        </svg>
-                        <span className="ml-4 text-base color-thm-red color-thm-red">{item?.contact_number}</span>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-          <div className="slider " style={{ width: "32%", height: "100%" }}>
-            {officialSlider && officialSlider?.length > 0 && <Carousel responsive={responsive} arrows={false} autoPlay autoPlaySpeed={4000} infinite>
-              {officialSlider && officialSlider.map((item: any, index: number) => {
-                return (
-                  <div key={index} className="swiper-slide d-flex gap-1" style={{ width: "100%", height: "100%" }}>
-                    <div className="d-flex gap-1 h-100" >
-                      {item?.photo ?
-                        <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} /> : <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.hostUrl + "assets/images/profile.jpg"} />
-                      }
-                      <div className="d-flex flex-column justify-content-between py-2" style={{ width: "60%", height: "100%" }}>
-                        <div>
-                          <div className=" text-md whitespace-nowrap font-bold " style={{ margin: "-4px", width: "100%" }}>{item?.name}</div>
-                          <div className="   whitespace-nowrap overflow-hidden color-thm-green" style={{ margin: "-4px" }}>{item?.position}</div>
-                        </div>
-                        <div className="d-flex relative align-items-center gap-3">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
-                            <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
-
-                            </path>
-                          </svg>
-                          <span className="ml-4 text-base color-thm-red">{item?.contact_number}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
-            </Carousel>}
-          </div>
-        </div>
-      </section>
-      <section className="main-content">
-        <div className="d-flex" style={{ height: "62vh" }}>
-          <div className="d-flex flex-column " style={{width:"25%"}}>
-            <label className="text-white bg-thm-blue w-100 h-[3vh] d-flex align-items-center justify-content-center">कर्मचारिहरु</label>
-            <div className="d-flex h-[59vh]">
-              <div className="d-flex flex-col w-[20vw] py-2">
-                <div className="d-flex flex-col  px-2 h-[31vh] justify-between">
-                  {staff && staff.length > 0 && staff.map((item: any, index: number) => {
-                    return (
-                      <div key={index} className="d-flex gap-4 h-[15.5vh] p-1">
-                        <img className="h-[13vh] w-[6vw] object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} />
-                        <div className="d-flex flex-column justify-content-between ">
-                          <div>
-                            <div className=" text-lg whitespace-nowrap font-bold" >{item?.name}</div>
-                            <div className=" color-thm-green whitespace-nowrap overflow-hidden" >{item?.position}</div>
-                          </div>
-                          {item?.contact_number &&
+                      <div key={index} className="swiper-slide d-flex gap-1" style={{ width: "100%", height: "100%" }}>
+                        <div className="d-flex gap-1 h-100" >
+                          {item?.photo ?
+                            <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} /> : <img style={{ width: "40%", height: "100%" }} className=" object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.hostUrl + "assets/images/profile.jpg"} />
+                          }
+                          <div className="d-flex flex-column justify-content-between py-2" style={{ width: "60%", height: "100%" }}>
+                            <div>
+                              <div className=" text-md whitespace-nowrap font-bold " style={{ margin: "-4px", width: "100%" }}>{item?.name}</div>
+                              <div className="   whitespace-nowrap overflow-hidden color-thm-green" style={{ margin: "-4px" }}>{item?.position}</div>
+                            </div>
                             <div className="d-flex relative align-items-center gap-3">
                               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
                                 <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
+
                                 </path>
                               </svg>
                               <span className="ml-4 text-base color-thm-red">{item?.contact_number}</span>
                             </div>
-                          }
-                          <label className=" color-thm-blue" style={{ margin: "-3px" }}>
-                          </label>
+                          </div>
                         </div>
                       </div>
                     )
                   })}
-                </div>
-                <div className=" d-flex flex-column gap-4 px-2 h-[27vh] justify-between staff-slider">
-                  {staffSLider && staffSLider?.length > 0 &&
-                    <div className="vertical-carousel">
-                      <Slider {...settings}>
-                        {staffSLider && staffSLider.map((item: any, index: number) => (
+                </Carousel>}
+              </div>
+            </div>
+          </section>
+          <section className="main-content">
+            <div className="d-flex" style={{ height: "62vh" }}>
+              <div className="d-flex flex-column " style={{ width: "25%" }}>
+                <label className="text-white bg-thm-blue w-100 h-[3vh] d-flex align-items-center justify-content-center">कर्मचारिहरु</label>
+                <div className="d-flex h-[59vh]">
+                  <div className="d-flex flex-col w-[20vw] py-2">
+                    <div className="d-flex flex-col  px-2 h-[31vh] justify-between">
+                      {staff && staff.length > 0 && staff.map((item: any, index: number) => {
+                        return (
                           <div key={index} className="d-flex gap-4 h-[15.5vh] p-1">
-                            <img
-                              className="h-[13vh] w-[6vw] object-cover aspect-auto"
-                              alt={`${item?.name}`}
-                              src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo}
-                            />
-                            <div className="d-flex flex-column justify-content-between">
+                            <img className="h-[13vh] w-[6vw] object-cover aspect-auto" alt={`${item?.name}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo} />
+                            <div className="d-flex flex-column justify-content-between ">
                               <div>
-                                <div className="text-lg whitespace-nowrap font-bold">{item?.name}</div>
-                                <div className=" color-thm-green whitespace-nowrap overflow-hidden">{item?.position}</div>
+                                <div className=" text-lg whitespace-nowrap font-bold" >{item?.name}</div>
+                                <div className=" color-thm-green whitespace-nowrap overflow-hidden" >{item?.position}</div>
                               </div>
-                              {item?.contact_number && (
+                              {item?.contact_number &&
                                 <div className="d-flex relative align-items-center gap-3">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 24 24"
-                                    className="absolute w-4 text-blue-400"
-                                    fill="currentColor"
-                                  >
-                                    <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z"></path>
+                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="absolute w-4 text-blue-400" fill="currentColor">
+                                    <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z">
+                                    </path>
                                   </svg>
                                   <span className="ml-4 text-base color-thm-red">{item?.contact_number}</span>
                                 </div>
-                              )}
-                              <label className="color-thm-blue" style={{ margin: '-3px' }}></label>
+                              }
+                              <label className=" color-thm-blue" style={{ margin: "-3px" }}>
+                              </label>
                             </div>
                           </div>
-                        ))}
-                      </Slider>
+                        )
+                      })}
                     </div>
+                    <div className=" d-flex flex-column gap-4 px-2 h-[27vh] justify-between staff-slider">
+                      {staffSLider && staffSLider?.length > 0 &&
+                        <div className="vertical-carousel">
+                          <Slider {...settings}>
+                            {staffSLider && staffSLider.map((item: any, index: number) => (
+                              <div key={index} className="d-flex gap-4 h-[15.5vh] p-1">
+                                <img
+                                  className="h-[13vh] w-[6vw] object-cover aspect-auto"
+                                  alt={`${item?.name}`}
+                                  src={ApiEndPoints.baseUrl + "/get-images/" + item?.photo}
+                                />
+                                <div className="d-flex flex-column justify-content-between">
+                                  <div>
+                                    <div className="text-lg whitespace-nowrap font-bold">{item?.name}</div>
+                                    <div className=" color-thm-green whitespace-nowrap overflow-hidden">{item?.position}</div>
+                                  </div>
+                                  {item?.contact_number && (
+                                    <div className="d-flex relative align-items-center gap-3">
+                                      <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        className="absolute w-4 text-blue-400"
+                                        fill="currentColor"
+                                      >
+                                        <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z"></path>
+                                      </svg>
+                                      <span className="ml-4 text-base color-thm-red">{item?.contact_number}</span>
+                                    </div>
+                                  )}
+                                  <label className="color-thm-blue" style={{ margin: '-3px' }}></label>
+                                </div>
+                              </div>
+                            ))}
+                          </Slider>
+                        </div>
+                      }
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+              <div className="d-flex  main-slider " style={{ width: "50%" }}>
+                {mainContain && mainContain?.length > 0 &&
+                  <Carousel responsive={responsive1} infinite arrows={false} autoPlay autoPlaySpeed={8000}>
+                    {mainContain && mainContain.map((item: any, index: number) => {
+                      return (
+                        <div key={index} style={{ width: "100%", height: "100%" }}>
+                          <div className="d-flex flex-column h-100">
+                            <label style={{ padding: "1px" }} className="d-flex justify-content-center align-items-center font-bold text-white h-[3vh]  bg-thm-blue w-[50vw]">{item?.title}</label>
+                            {item?.image ?
+                              <img className="w-100 h-[59vh] border border-right border-left border-light" style={{ objectFit: "contain" }} alt={`${item?.title}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.image} /> : ""}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </Carousel>
+                }
+              </div>
+              <div className=" " style={{ width: "25%" }}>
+                <div style={{ width: "100%" }}>
+                  <Carousel responsive={responsive1} autoPlay autoPlaySpeed={8000} infinite arrows={false}>
+                    <div className="" data-swiper-slide-index="2" style={{ width: "100%" }}>
+                      <div className="d-flex justify-content-center align-items-center">
+                        <div className="container">
+                          <div className="d-flex flex-col  align-items-center ">
+                            {settingData && <label className="text-white bg-thm-blue w-[40vw] h-[3vh] flex align-items-center justify-content-center">{settingData[3]?.setting[0]?.value}</label>}
+                            <div className=" m-1">
+                              <table className="table-auto min-w-full table-fixed border">
+                                <thead className="bg-green-400 text-white">
+                                  <tr>
+                                    <th className="py-0 px-1  w-auto  border">क्र.स</th>
+                                    <th className="py-1 px-1  w-auto  border">बिनियोजन बजेट शिर्षक</th>
+                                    <th className="py-1 px-1  w-auto  border">बिनियोजन रकम</th>
+                                    <th className="py-1 px-1  w-auto  border">खर्च भुक्तानी रकम</th>
+                                    <th className="py-1 px-1  w-auto  border">भुक्तानी हुन बाँकि रकम</th>
+                                    <th className="py-1 px-1  w-auto  border">कैफियत</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {biniyojanasub && biniyojanasub?.length > 0 && biniyojanasub.map((item: any, index: number) => {
+                                    return (
+                                      <tr key={index} className="bg-gray-300">
+                                        <td className="py-0 px-1  w-auto  border">{index + 1}</td>
+                                        <td className="py-1 px-1  w-auto  border">{item?.plan_name}</td>
+                                        <td className="py-1 px-1  w-auto  border">
+                                        </td>
+                                        <td className="py-1 px-1  w-auto  border">
+                                        </td>
+                                      </tr>
+                                    )
+                                  })}
+                                </tbody>
+                              </table>.</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="" style={{ width: "100%" }}>
+                      <div className="d-flex align-items-center justify-content-center">
+                        <div className="container">
+                          <div className="d-flex flex-col align-items-center">
+                            {settingData && <label className="text-white bg-thm-blue w-[40vw] h-[3vh] flex align-items-center justify-content-center">{settingData[1]?.setting[0]?.value}</label>}
+                            <div className="m-1">
+                              <table className="table-auto max-w-full mr-2 table-auto border">
+                                <thead className="bg-green-400 text-white">
+                                  <tr>
+                                    <th className="py-0 px-1  w-auto  border">क्र.स</th>
+                                    <th className="py-1 px-1  w-auto  border">आर्थिक बर्षको बजेट बिनियोजन</th>
+                                    <th className="py-1 px-1  w-auto  border">अघिल्लो आर्थिक बर्ष</th>
+                                    <th className="py-1 px-1  w-auto  border">चालु आर्थिक बर्ष</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {biniyojan && biniyojan?.length > 0 && biniyojan.map((item: any, index: number) => {
+                                    return (
+                                      <tr key={index} className="bg-gray-300">
+                                        <td className="py-0 px-1  w-auto  border">{index + 1}</td>
+                                        <td className="py-1 px-1  w-auto  border">{item?.plan_name}</td>
+                                        <td className="py-1 px-1  w-auto  border">
+                                        </td>
+                                        <td className="py-1 px-1  w-auto  border">
+                                        </td>
+                                      </tr>
+                                    )
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="" data-swiper-slide-index="1" style={{ width: "100%" }}>
+                      <div className="d-flex justify-content-center align-items-center">
+                        <div className="container">
+                          <div className="d-flex flex-col align-items-center">
+                            {settingData && <label className="text-white bg-thm-blue w-[40vw] h-[3vh] flex align-items-center justify-content-center">{settingData[2]?.setting[0]?.value}</label>}
+                            <div className=" m-1">
+                              <table className="table-auto min-w-full table-fixed border mr-2">
+                                <thead className="bg-green-400 text-white">
+                                  <tr>
+                                    <th className="py-1 px-1 w-auto border">क्र.स</th>
+                                    <th className="py-1 px-1 w-auto border">बिनियोज बजेट श्रोत</th>
+                                    <th className="py-1 px-1 w-auto border">बिनियोजन बजेट रकम</th>
+                                    <th className="py-1 px-1 w-auto border">खर्च बजेट रकम (2080-8-03)</th>
+                                    <th className="py-1 px-1 w-auto border">खर्च हुन बाँकि रकम</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {biniyojanamain && biniyojanamain?.length > 0 && biniyojanamain.map((item: any, index: number) => {
+                                    return (
+                                      <tr key={index} className="bg-gray-300">
+                                        <td className="py-0 px-1  w-auto  border">{index + 1}</td>
+                                        <td className="py-1 px-1  w-auto  border">{item?.plan_name}</td>
+                                        <td className="py-1 px-1  w-auto  border">
+                                        </td>
+                                        <td className="py-1 px-1  w-auto  border">
+                                        </td>
+                                      </tr>
+                                    )
+                                  })}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Carousel>
+                </div>
+                <div className=" mx-aauto d-flex flex-column justify-content-center position-absolute w-100 mt-2 swiper-backface-hidden">
+                  {notice && notice?.length > 0 &&
+                    <Carousel responsive={responsive1} arrows={false} infinite>
+                      {notice && notice.map((item: any, index: number) => {
+                        return (
+                          <div key={index} className=" d-flex gap-4" data-swiper-slide-index="2" style={{ width: "25%", paddingLeft: "1rem" }}>
+                            <div className="rounded-sm border my-1">
+                              <label className="font-bold text-lg text-center flex justify-content-center bg-thm-red text-white">सूचना सूचना सूचना !!!</label>
+                              <p className="break-all text-base p-2 text-black">{item?.content}</p>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </Carousel>
                   }
                 </div>
               </div>
+            </div>
+          </section>
+          <section className="footer">
+            <div className="absolute bottom-0 bg-thm-red flex w-full justify-content-center text-white py-1 h-[4vh] align-items-center z-10"><label>Powered By GrayCode Technology Pvt. Ltd.</label></div>
+          </section>
+        </div>
+      }
+      {(pageChange == true) &&
+        <div className="d-flex col-xl-12 col-lg-12 h-[85vh] p-1" style={{ backgroundColor: "bisque" }}>
+          <div className="col-6 pe-1 h-100">
+            <video className="h-100 w-100 object-fit-cover" controls autoPlay loop muted src={youtubeVideo ? youtubeVideo[0]?.data : '/assets/video/himali.mp4'} width={"100%"} height={"100%"}></video>
+          </div>
+          <div className="col-6 m-0 ps-1 pdf-carousel h-100">
 
+            <div className=" d-flex justify-content-center " style={{ backgroundColor: "#3460b9" }}>
+              <span className="text-center text-white fs-5">
+                मकालु गाउँपालिका कार्यालयको डिजिटल नागरिक बडापत्र
+              </span>
             </div>
-          </div>
-          <div className="d-flex  main-slider " style={{width:"50%"}}>
-            {mainContain && mainContain?.length > 0 &&
-              <Carousel responsive={responsive1} infinite arrows={false} autoPlay autoPlaySpeed={8000}>
-                {mainContain && mainContain.map((item: any, index: number) => {
-                  return (
-                    <div key={index} style={{ width: "100%", height: "100%" }}>
-                      <div className="d-flex flex-column h-100">
-                        <label style={{ padding: "1px" }} className="d-flex justify-content-center align-items-center font-bold text-white h-[3vh]  bg-thm-blue w-[50vw]">{item?.title}</label>
-                        {item?.image ?
-                          <img className="w-100 h-[59vh] border border-right border-left border-light" style={{ objectFit: "contain" }} alt={`${item?.title}`} src={ApiEndPoints.baseUrl + "/get-images/" + item?.image} /> : ""}
-                      </div>
+            {wadaPatraImage && wadaPatraImage?.length > 0 && (
+              <Carousel
+                arrows={false}
+                autoPlaySpeed={8000}
+                autoPlay
+                infinite
+                responsive={responsive3}
+              >
+                {wadaPatraImage &&
+                  wadaPatraImage?.map((item: any, index: number) => (
+                    <div key={index} className="w-100 h-100">
+
+                      <img src={item.data} className="img-fluid h-100" />
                     </div>
-                  )
-                })}
+                  ))}
               </Carousel>
-            }
-          </div>
-          <div className=" " style={{width:"25%"}}>
-            <div style={{width:"100%"}}>
-              <Carousel responsive={responsive1} autoPlay autoPlaySpeed={8000} infinite arrows={false}>
-                <div className="" data-swiper-slide-index="2" style={{ width: "100%" }}>
-                  <div className="d-flex justify-content-center align-items-center">
-                    <div className="container">
-                      <div className="d-flex flex-col  align-items-center ">
-                        {settingData && <label className="text-white bg-thm-blue w-[40vw] h-[3vh] flex align-items-center justify-content-center">{settingData[3]?.setting[0]?.value}</label>}
-                        <div className=" m-1">
-                          <table className="table-auto min-w-full table-fixed border">
-                            <thead className="bg-green-400 text-white">
-                              <tr>
-                                <th className="py-0 px-1  w-auto  border">क्र.स</th>
-                                <th className="py-1 px-1  w-auto  border">बिनियोजन बजेट शिर्षक</th>
-                                <th className="py-1 px-1  w-auto  border">बिनियोजन रकम</th>
-                                <th className="py-1 px-1  w-auto  border">खर्च भुक्तानी रकम</th>
-                                <th className="py-1 px-1  w-auto  border">भुक्तानी हुन बाँकि रकम</th>
-                                <th className="py-1 px-1  w-auto  border">कैफियत</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {biniyojanasub && biniyojanasub?.length > 0 && biniyojanasub.map((item: any, index: number) => {
-                                return (
-                                  <tr key={index} className="bg-gray-300">
-                                    <td className="py-0 px-1  w-auto  border">{index + 1}</td>
-                                    <td className="py-1 px-1  w-auto  border">{item?.plan_name}</td>
-                                    <td className="py-1 px-1  w-auto  border">
-                                    </td>
-                                    <td className="py-1 px-1  w-auto  border">
-                                    </td>
-                                  </tr>
-                                )
-                              })}
-                            </tbody>
-                          </table>.</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="" style={{ width: "100%" }}>
-                  <div className="d-flex align-items-center justify-content-center">
-                    <div className="container">
-                      <div className="d-flex flex-col align-items-center">
-                        {settingData && <label className="text-white bg-thm-blue w-[40vw] h-[3vh] flex align-items-center justify-content-center">{settingData[1]?.setting[0]?.value}</label>}
-                        <div className="m-1">
-                          <table className="table-auto max-w-full mr-2 table-auto border">
-                            <thead className="bg-green-400 text-white">
-                              <tr>
-                                <th className="py-0 px-1  w-auto  border">क्र.स</th>
-                                <th className="py-1 px-1  w-auto  border">आर्थिक बर्षको बजेट बिनियोजन</th>
-                                <th className="py-1 px-1  w-auto  border">अघिल्लो आर्थिक बर्ष</th>
-                                <th className="py-1 px-1  w-auto  border">चालु आर्थिक बर्ष</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {biniyojan && biniyojan?.length > 0 && biniyojan.map((item: any, index: number) => {
-                                return (
-                                  <tr key={index} className="bg-gray-300">
-                                    <td className="py-0 px-1  w-auto  border">{index + 1}</td>
-                                    <td className="py-1 px-1  w-auto  border">{item?.plan_name}</td>
-                                    <td className="py-1 px-1  w-auto  border">
-                                    </td>
-                                    <td className="py-1 px-1  w-auto  border">
-                                    </td>
-                                  </tr>
-                                )
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="" data-swiper-slide-index="1" style={{ width: "100%" }}>
-                  <div className="d-flex justify-content-center align-items-center">
-                    <div className="container">
-                      <div className="d-flex flex-col align-items-center">
-                        {settingData && <label className="text-white bg-thm-blue w-[40vw] h-[3vh] flex align-items-center justify-content-center">{settingData[2]?.setting[0]?.value}</label>}
-                        <div className=" m-1">
-                          <table className="table-auto min-w-full table-fixed border mr-2">
-                            <thead className="bg-green-400 text-white">
-                              <tr>
-                                <th className="py-1 px-1 w-auto border">क्र.स</th>
-                                <th className="py-1 px-1 w-auto border">बिनियोज बजेट श्रोत</th>
-                                <th className="py-1 px-1 w-auto border">बिनियोजन बजेट रकम</th>
-                                <th className="py-1 px-1 w-auto border">खर्च बजेट रकम (2080-8-03)</th>
-                                <th className="py-1 px-1 w-auto border">खर्च हुन बाँकि रकम</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {biniyojanamain && biniyojanamain?.length > 0 && biniyojanamain.map((item: any, index: number) => {
-                                return (
-                                  <tr key={index} className="bg-gray-300">
-                                    <td className="py-0 px-1  w-auto  border">{index + 1}</td>
-                                    <td className="py-1 px-1  w-auto  border">{item?.plan_name}</td>
-                                    <td className="py-1 px-1  w-auto  border">
-                                    </td>
-                                    <td className="py-1 px-1  w-auto  border">
-                                    </td>
-                                  </tr>
-                                )
-                              })}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Carousel>
-            </div>
-            <div className=" mx-aauto d-flex flex-column justify-content-center position-absolute w-100 mt-2 swiper-backface-hidden">
-              {notice && notice?.length > 0 &&
-                <Carousel responsive={responsive1} arrows={false}  infinite>
-                  {notice && notice.map((item: any, index: number) => {
-                    return (
-                      <div key={index} className=" d-flex gap-4" data-swiper-slide-index="2" style={{width:"25%", paddingLeft: "1rem" }}>
-                        <div className="rounded-sm border my-1">
-                          <label className="font-bold text-lg text-center flex justify-content-center bg-thm-red text-white">सूचना सूचना सूचना !!!</label>
-                          <p className="break-all text-base p-2 text-black">{item?.content}</p>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </Carousel>
-              }
-            </div>
+            )}
           </div>
         </div>
-      </section>
-      <section className="footer">
-        <div className="absolute bottom-0 bg-thm-red flex w-full justify-content-center text-white py-1 h-[4vh] align-items-center z-10"><label>Powered By GrayCode Technology Pvt. Ltd.</label></div>
-      </section>
+      }
     </>
   )
 }
+
