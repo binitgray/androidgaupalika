@@ -8,6 +8,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { getAllMedia, saveText } from "@/utils/indexdb";
+import { useRouter } from "next/navigation";
 
 export default function Gaupalika() {
 
@@ -94,7 +95,8 @@ export default function Gaupalika() {
   const GetScreenData = async () => {
     // var resp
     var resp = await AndroidServices.Screens1();
-    if (resp) {
+    if (resp && resp.officals && resp.officalSLider &&resp.mainContain && resp.staffSLider && resp.staff && resp.notice && resp.biniyojan &&resp.biniyojanamain && resp.biniyojanasub && resp.generalInfo) {
+      debugger
 
       await saveText(15, resp, "firstpagedetail")
     }
@@ -118,6 +120,8 @@ export default function Gaupalika() {
     var resp = await AndroidServices.Settings();
     setSettingData(resp.data);
   }
+  const router = useRouter()
+  setTimeout(()=>{router.push("/gaupalika") },60*1000)
 
   useEffect(() => {
     GetScreenData();

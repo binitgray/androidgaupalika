@@ -6,8 +6,9 @@ import AndroidServices from "../services/androidservice";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import convert from "@/utils/convetor";
-import { getAllMedia, saveMedia, saveText } from "@/utils/indexdb";
+import { getAllMedia, saveMedia } from "@/utils/indexdb";
 import { urlToBase64 } from "../api/base64";
+import { useRouter } from "next/navigation";
 
 
 const responsive = {
@@ -124,6 +125,8 @@ const fetchMedia = async () => {
       // ConvetToBase64()
    
     }, []);
+    const router = useRouter()
+    setTimeout(()=>{router.push("/") },60*1000)
     
   useEffect(() => {
     getVideo();
@@ -132,8 +135,8 @@ const fetchMedia = async () => {
 
   return (
 
-    <div className="d-flex col-xl-12 col-lg-12">
-      <div style={{ height: "80vh" }} className="col-6 ">
+    <div className="d-flex col-xl-12 col-lg-12 bg-primary">
+      <div style={{ height: "80vh" }} className="col-6 my-1">
         {/* <img src={mediaList[0].data} width={100} height={100}/> */}
     
         <video className="mx-2" controls autoPlay src={youtubeVideo?youtubeVideo[0]?.data :'/assets/video/himali.mp4'}   width={"100%"} height={"100%"}></video>
@@ -150,8 +153,8 @@ const fetchMedia = async () => {
       </div>
       <div className="col-6 m-0 p-0" style={{ height: "80vh" }}>
       
-        <div className="bg-primary d-flex justify-content-center ">
-          <span className="text-center text-white">
+        <div className=" d-flex justify-content-center " style={{ backgroundColor: "#3460b9" }}>
+          <span className="text-center text-white fs-5">
             मकालु गाउँपालिका कार्यालयको डिजिटल नागरिक बडापत्र
           </span>
         </div>
