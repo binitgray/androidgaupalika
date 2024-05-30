@@ -107,14 +107,17 @@ const ConvetToBase64=async(path:string)=>{
 
 }
 const [wadapatraPdf,setWadaPatraPdf]=useState<any>()
+const [youtubeVideo,setYoutubeVideo]=useState<any>()
 const fetchMedia = async () => {
   setWadaPatraImage([]);
   const media = await getAllMedia();
   setMediaList(media);
+  setYoutubeVideo(media.filter((item:any)=>(item.type=="youtube")))
   setWadaPatraPdf(media.filter((item: any) => (item.type == "wadapatrapdf")));
   
   
 }; 
+
     useEffect(() => {
       fetchMedia()
       getWadaPatraImages()
@@ -133,7 +136,7 @@ const fetchMedia = async () => {
       <div style={{ height: "80vh" }} className="col-6 ">
         {/* <img src={mediaList[0].data} width={100} height={100}/> */}
     
-        <video className="mx-2" controls autoPlay src={'/assets/video/himali.mp4'}   width={"100%"} height={"100%"}></video>
+        <video className="mx-2" controls autoPlay src={youtubeVideo?youtubeVideo[0]?.data :'/assets/video/himali.mp4'}   width={"100%"} height={"100%"}></video>
 
         {/* <iframe
           width="100%"

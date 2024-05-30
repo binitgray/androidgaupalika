@@ -1,36 +1,55 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import AndroidServices from "../services/androidservice";
 import NepaliDate from "nepali-date-converter";
 import { getAllMedia, saveText } from "@/utils/indexdb";
+import { error } from "console";
+import axios from "axios";
 
 export default function Navbar() {
-  const [headerData,setHeaderData]=useState<any>()
+  const [headerData, setHeaderData] = useState<any>();
   const getHeader = async () => {
     var response = await AndroidServices.Screens1();
-    if(response){
-      await saveText(14,response?.screenInfo,"headerInfo")
-
+    if (response) {
+      await saveText(14, response?.screenInfo, "headerInfo");
     }
     const media = await getAllMedia();
-
-
-    setHeaderData(media.filter((item:any)=>item.type=="headerInfo"))
+    setHeaderData(media.filter((item: any) => item.type == "headerInfo"));
   };
   const date = new Date();
   const hour = date.getHours();
   const minute = date.getMinutes();
-  
-  const nepaliDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
-  
-  function toNepaliNumerals(number:any) {
-    return number.toString().split('').map((digit:any) => nepaliDigits[digit]).join('');
-  }
-  
 
+  const nepaliDigits = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+
+  function toNepaliNumerals(number: any) {
+    return number
+      .toString()
+      .split("")
+      .map((digit: any) => nepaliDigits[digit])
+      ?.join("");
+  }
+
+  const [weatherDetail, setWeatherDetail] = useState<any>();
+  const getWeather = async () => {
+    try {
+      axios
+      .get(
+        "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/241809?apikey=92qhweritEx8Ag7GIb3VAdg2XGrvEvDp"
+      )
+      .then((result) => {
+        setWeatherDetail(result);
+      });
+      
+    } catch (error) {
+      console.log("weather api error",error);
+      
+    }
   
-  
+  };
+
   useEffect(() => {
+    getWeather();
     getHeader();
   }, []);
   return (
@@ -61,7 +80,7 @@ export default function Navbar() {
             <div className="mx-4">
               <div>
                 <span style={{ color: "#3460b9", fontWeight: "bolder" }}>
-                  27°C
+                  {weatherDetail &&weatherDetail?.data[0]?.Temperature?.Value>0? ((weatherDetail?.data[0]?.Temperature?.Value-32)*(5/9))?.toFixed(2):0.0} °C
                 </span>
               </div>
               <div>
@@ -82,7 +101,7 @@ export default function Navbar() {
               className="font-bold "
               style={{ color: "#d01e29", lineHeight: "1.5rem" }}
             >
-               {headerData && headerData[0]?.data?.heading_2}
+              {headerData && headerData[0]?.data?.heading_2}
             </label>
             <label
               className="font-bold "
@@ -146,7 +165,8 @@ export default function Navbar() {
                 {/* २०८१ जेठ १४  */}
               </label>
               <label className=" text-xl  italic" style={{ color: "#d01e29" }}>
-                {new NepaliDate(new Date()).format(" ddd ", "np")},{toNepaliNumerals(hour)}:{toNepaliNumerals(minute)}
+                {new NepaliDate(new Date()).format(" ddd ", "np")},
+                {toNepaliNumerals(hour)}:{toNepaliNumerals(minute)}
                 {/* सोमबार , १७ : ५१ बजे */}
               </label>
             </div>
