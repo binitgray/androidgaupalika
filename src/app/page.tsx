@@ -165,26 +165,26 @@ export default function Gaupalika() {
       const detail = media.filter((item) => item.type === "firstpagedetail");
   
       if (detail.length > 0 && detail[0].data) {
-        const officialSliderPromises = detail[0].data.officalSLider.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "officialSlider",index)
-        );
-        await Promise.all(officialSliderPromises);
-        const officialsPromise =  detail[0].data.officals.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "officials",index)
-        );
-        await Promise.all(officialsPromise);
-        const staffPromise=detail[0].data.staff.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "staff",index)
-        );
-        await Promise.all(staffPromise);
-        const staffSliderPromise=detail[0].data.staffSLider.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "staffSLider",index)
-        );
-        await Promise.all(staffSliderPromise);
-        const mainContentPromise=detail[0].data.mainContain.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "mainContain",index)
-        );
-        await Promise.all(mainContentPromise);
+        // const officialSliderPromises = detail[0].data.officalSLider.map((item:any,index:number) => 
+        //   ConvetToBase64FirstPage(item, "officialSlider",index)
+        // );
+        // await Promise.all(officialSliderPromises);
+        // const officialsPromise =  detail[0].data.officals.map((item:any,index:number) => 
+        //   ConvetToBase64FirstPage(item, "officials",index)
+        // );
+        // await Promise.all(officialsPromise);
+        // const staffPromise=detail[0].data.staff.map((item:any,index:number) => 
+        //   ConvetToBase64FirstPage(item, "staff",index)
+        // );
+        // await Promise.all(staffPromise);
+        // const staffSliderPromise=detail[0].data.staffSLider.map((item:any,index:number) => 
+        //   ConvetToBase64FirstPage(item, "staffSLider",index)
+        // );
+        // await Promise.all(staffSliderPromise);
+        // const mainContentPromise=detail[0].data.mainContain.map((item:any,index:number) => 
+        //   ConvetToBase64FirstPage(item, "mainContain",index)
+        // );
+        // await Promise.all(mainContentPromise);
         setScreenData(detail[0].data.badaPatra[0]?.image);
         setNotice(detail[0].data.notice);
         setBiniyojan(detail[0].data.biniyojan);
@@ -198,6 +198,125 @@ export default function Gaupalika() {
       console.error("Error fetching screen data:", error);
     }
   };
+  const GetScreenData1 = async () => {
+    try {
+      const resp = await AndroidServices.Screens1();
+      if (resp.message === "fetch") {
+        await saveText(15, resp, "firstpagedetail");
+      }
+  
+      const media = await getAllMedia();
+      const detail = media.filter((item) => item.type === "firstpagedetail");
+  
+      if (detail.length > 0 && detail[0].data) {
+        const officialSliderPromises = detail[0].data.officalSLider.map((item:any,index:number) => 
+          ConvetToBase64FirstPage(item, "officialSlider",index)
+        );
+        await Promise.all(officialSliderPromises);
+       
+      }
+    } catch (error) {
+      console.error("Error fetching screen data:", error);
+    }
+  };
+  const GetScreenData2 = async () => {
+    try {
+      const resp = await AndroidServices.Screens1();
+      if (resp.message === "fetch") {
+        await saveText(15, resp, "firstpagedetail");
+      }
+  
+      const media = await getAllMedia();
+      const detail = media.filter((item) => item.type === "firstpagedetail");
+  
+      if (detail.length > 0 && detail[0].data) {
+    
+        const officialsPromise =  detail[0].data.officals.map((item:any,index:number) => 
+          ConvetToBase64FirstPage(item, "officials",index)
+        );
+        await Promise.all(officialsPromise);
+      
+      }
+    } catch (error) {
+      console.error("Error fetching screen data:", error);
+    }
+  };
+  const GetScreenData3 = async () => {
+    try {
+      const resp = await AndroidServices.Screens1();
+      if (resp.message === "fetch") {
+        await saveText(15, resp, "firstpagedetail");
+      }
+  
+      const media = await getAllMedia();
+      const detail = media.filter((item) => item.type === "firstpagedetail");
+  
+      if (detail.length > 0 && detail[0].data) {
+    
+        const staffPromise=detail[0].data.staff.map((item:any,index:number) => 
+          ConvetToBase64FirstPage(item, "staff",index)
+        );
+        await Promise.all(staffPromise);
+      
+      }
+    } catch (error) {
+      console.error("Error fetching screen data:", error);
+    }
+  };
+
+  const GetScreenData4 = async () => {
+    try {
+      const resp = await AndroidServices.Screens1();
+      if (resp.message === "fetch") {
+        await saveText(15, resp, "firstpagedetail");
+      }
+  
+      const media = await getAllMedia();
+      const detail = media.filter((item) => item.type === "firstpagedetail");
+  
+      if (detail.length > 0 && detail[0].data) {
+      
+        const staffSliderPromise=detail[0].data.staffSLider.map((item:any,index:number) => 
+          ConvetToBase64FirstPage(item, "staffSLider",index)
+        );
+        await Promise.all(staffSliderPromise);
+      
+      }
+    } catch (error) {
+      console.error("Error fetching screen data:", error);
+    }
+  };
+  const GetScreenData5 = async () => {
+    try {
+      const resp = await AndroidServices.Screens1();
+      if (resp.message === "fetch") {
+        await saveText(15, resp, "firstpagedetail");
+      }
+  
+      const media = await getAllMedia();
+      const detail = media.filter((item) => item.type === "firstpagedetail");
+  
+      if (detail.length > 0 && detail[0].data) {
+       
+        const mainContentPromise=detail[0].data.mainContain.map((item:any,index:number) => 
+          ConvetToBase64FirstPage(item, "mainContain",index)
+        );
+        await Promise.all(mainContentPromise);
+   
+      }
+    } catch (error) {
+      console.error("Error fetching screen data:", error);
+    }
+  };
+
+
+
+
+
+
+
+
+
   const [settingData, setSettingData] = useState<any>();
   const GetSettingData = async () => {
     var resp = await AndroidServices.Settings();
@@ -242,7 +361,6 @@ export default function Gaupalika() {
         path.image = base64;
         await saveMedia( index, path, name);
         const media = await getAllMedia();
-        console.log("media",media);
         setMediaList(media);
         const data = media.filter((item) => item.type === name);
         if (name === "officialSlider") {
@@ -266,14 +384,12 @@ export default function Gaupalika() {
       console.error("Error converting to base64:", error);
     }
   };
-  console.log("offfff",officials);
   
   
   // const handleImageUploadFirstPage = async (event:any, originaldata:any, keyname:any) => {
   //   originaldata.image = event;
   //   await saveMedia(count + 1, originaldata, keyname);
   //   const media = await getAllMedia();
-  //   console.log("media",media);
   //   setMediaList(media);
   //   const data = media.filter((item) => item.type === keyname);
   //   if (keyname === "officialSlider") {
@@ -295,7 +411,6 @@ export default function Gaupalika() {
   const fetchMedia = async () => {
     setWadaPatraImage([]);
     const media = await getAllMedia();
-    console.log(media, "media");
 
     setMediaList(media);
     setYoutubeVideo(media.filter((item: any) => item.type == "youtube"));
@@ -303,7 +418,6 @@ export default function Gaupalika() {
   };
   let palikaLength: any = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10.11, 12, 13, 14, 15];
 
-  console.log(wadaPatraImage, "wada");
 
   useEffect(() => {
     fetchMedia();
@@ -317,14 +431,21 @@ export default function Gaupalika() {
 
   useEffect(() => {
     GetScreenData();
+    GetScreenData1();
+    GetScreenData2();
+    GetScreenData3();
+    GetScreenData4();
+    GetScreenData5();
+
     GetSettingData();
   }, []);
+  console.log(mainContain);
+  
   const [muteControl, setMuteControl] = useState<boolean>(true);
   setTimeout(() => {
     setMuteControl(false);
   }, 2000);
   setTimeout(() => { setPageChange(!pageChange) }, 60 * 1000)
-  console.log(badapatraPdf, "bada");
 
   return (
     <>
