@@ -107,6 +107,7 @@ export default function Gaupalika() {
   const [biniyojanamain, setBiniyojanmain] = useState<any>();
   const [biniyojanasub, setBiniyojansub] = useState<any>();
   const [generalInfo, setGeneralInfo] = useState<any>()
+  const [badapatraPdf,setBadapatraPdf]=useState<any>()
   const GetScreenData = async () => {
     // var resp
     var resp = await AndroidServices.Screens1();
@@ -117,8 +118,7 @@ export default function Gaupalika() {
     }
     const media = await getAllMedia();
     const detail = media.filter((item: any) => (item.type == "firstpagedetail"))
-
-    setScreenData(resp);
+    setScreenData(detail[0]?.data?.badaPatra[0]?.image);
     setOfficials(detail && detail[0]?.data.officals)
     setOfficialSlider(detail && detail[0]?.data.officalSLider);
     setMainContain(detail && detail[0]?.data.mainContain);
@@ -129,6 +129,8 @@ export default function Gaupalika() {
     setBiniyojanmain(detail && detail[0]?.data.biniyojanamain);
     setBiniyojansub(detail && detail[0]?.data.biniyojanasub);
     setGeneralInfo(detail && detail[0]?.data.generalInfo)
+    setBadapatraPdf(detail[0]?.data?.badaPatra[0])
+    ConvetToBase64(detail[0]?.data?.badaPatra[0].image)
   };
   const [settingData, setSettingData] = useState<any>();
   const GetSettingData = async () => {
@@ -148,32 +150,27 @@ export default function Gaupalika() {
   const getPdf = async () => {
     var response = await AndroidServices.Screens();
     setPdfFile(response?.badaPatra[0]?.image);
-    ConvetToBase64(response?.badaPatra[0]?.image)
+    // ConvetToBase64(response?.badaPatra[0]?.image)
     let images = convert(ApiEndPoints.api + response?.badaPatra[0]?.image);
-    console.log(images);
 
-    // getImages(response?.badaPatra[0]?.image)
   };
+  
 
   const [base64Image, setBase64Image] = useState('');
   const [mediaList, setMediaList] = useState<any>([]);
 
   const handleImageUpload = async (event: any) => {
 
-    await saveMedia(13, event, 'wadapatrapdf');
+    await saveMedia(19, event, 'badapatrapdf');
     const media = await getAllMedia();
     setMediaList(media);
-
-  };
-  const [wadaPatraImage, setWadaPatraImage] = useState<any>();
-  const getWadaPatraImages = async () => {
-
-    const media = await getAllMedia();
-    let data = media.filter((item: any) => (item.type == "wadapatra"))
+    let data = media.filter((item: any) => (item.type == "badapatrapdf"))
     setWadaPatraImage(data)
 
 
-  }
+  };
+  const [wadaPatraImage, setWadaPatraImage] = useState<any>();
+
 
   const ConvetToBase64 = async (path: string) => {
     const imageUrl = "http://202.51.74.85:6003/get-images/" + path;
@@ -195,10 +192,13 @@ export default function Gaupalika() {
 
 
   };
+  let palikaLength:any=[1,2,3,4,5,6,7,8,9,10.11,12,13,14,15]
+  
 
+  
   useEffect(() => {
     fetchMedia()
-    getWadaPatraImages()
+    // getWadaPatraImages()
   }, []);
 
   useEffect(() => {
@@ -206,13 +206,15 @@ export default function Gaupalika() {
     getPdf();
   }, []);
 
-
+  
   useEffect(() => {
     GetScreenData();
     GetSettingData();
   }, [])
-
-  setTimeout(() => { setPageChange(!pageChange) }, 60 * 1000)
+  const [muteControl,setMuteControl]=useState<boolean>(true)
+  setTimeout(()=>{setMuteControl(false)},2000)
+  // setTimeout(() => { setPageChange(!pageChange) }, 60 * 1000)
+  console.log(badapatraPdf,'bada');
 
   return (
     <>
@@ -552,15 +554,17 @@ export default function Gaupalika() {
       {(pageChange == true) &&
         <div className="d-flex col-xl-12 col-lg-12 h-[85vh] p-1" style={{ backgroundColor: "bisque" }}>
           <div className="col-6 pe-1 h-100">
-            <video className="h-100 w-100 object-fit-cover" controls autoPlay loop muted src={youtubeVideo ? youtubeVideo[0]?.data : '/assets/video/himali.mp4'} width={"100%"} height={"100%"}></video>
+            <video className="h-100 w-100 object-fit-cover" controls autoPlay loop muted={muteControl} src={youtubeVideo ? youtubeVideo[0]?.data : '/assets/video/himali.mp4'} width={"100%"} height={"100%"}></video>
           </div>
           <div className="col-6 m-0 ps-1 pdf-carousel h-100">
 
             <div className=" d-flex justify-content-center " style={{ backgroundColor: "#3460b9" }}>
               <span className="text-center text-white fs-5">
-                मकालु गाउँपालिका कार्यालयको डिजिटल नागरिक बडापत्र
+                {badapatraPdf &&badapatraPdf?.title}
               </span>
             </div>
+            {/* <iframe src={wadaPatraImage &&wadaPatraImage[0]?.data} title="PDF Viewer" width="100%" height="100%" /> */}
+
             {wadaPatraImage && wadaPatraImage?.length > 0 && (
               <Carousel
                 arrows={false}
@@ -569,11 +573,13 @@ export default function Gaupalika() {
                 infinite
                 responsive={responsive3}
               >
-                {wadaPatraImage &&
-                  wadaPatraImage?.map((item: any, index: number) => (
+                {palikaLength &&
+                  palikaLength?.map((item: any, index: number) => (
                     <div key={index} className="w-100 h-100">
+                                  <iframe src={wadaPatraImage &&wadaPatraImage[0]?.data+`#page=${index+1}&toolbar=0&navpanes=0&scrollbar=0&view=fit`} title="PDF Viewer" width="100%" height="100%" />
 
-                      <img src={item.data} className="img-fluid h-100" />
+
+                      {/* <img src={item.data} className="img-fluid h-100" /> */}
                     </div>
                   ))}
               </Carousel>
