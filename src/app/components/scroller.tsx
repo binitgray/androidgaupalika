@@ -8,8 +8,7 @@ export default function Scroller() {
     const [marqueeNews,setMarqueeNew]=useState<any>()
     const getScrollerContent = async()=>{
         var response  = await AndroidServices.Screens()
-        if(response){
-
+        if ((response.message=="fetch")) {
             await saveText(response?.marqueeNews[0]?._id,response?.marqueeNews[0],"marqueenews")
         }
         const media = await getAllMedia();

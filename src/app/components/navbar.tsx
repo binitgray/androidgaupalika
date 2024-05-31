@@ -10,7 +10,7 @@ export default function Navbar() {
   const [headerData, setHeaderData] = useState<any>();
   const getHeader = async () => {
     var response = await AndroidServices.Screens1();
-    if (response) {
+    if ((response.message=="fetch")) {
       await saveText(14, response?.screenInfo, "headerInfo");
     }
     const media = await getAllMedia();
