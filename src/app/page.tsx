@@ -213,7 +213,7 @@ export default function Gaupalika() {
   }, [])
   const [muteControl,setMuteControl]=useState<boolean>(true)
   setTimeout(()=>{setMuteControl(false)},2000)
-  // setTimeout(() => { setPageChange(!pageChange) }, 60 * 1000)
+  setTimeout(() => { setPageChange(!pageChange) }, 60 * 1000)
   console.log(badapatraPdf,'bada');
 
   return (
