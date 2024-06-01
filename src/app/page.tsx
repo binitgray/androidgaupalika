@@ -141,287 +141,140 @@ export default function Gaupalika() {
       ),
     },
   ];
-  const [pageChange, setPageChange] = useState<any>(false);
-  const [screenData, setScreenData] = useState<any>();
-  const [officials, setOfficials] = useState<any>();
-  const [officialSlider, setOfficialSlider] = useState<any>();
-  const [staff, setStaff] = useState<any>();
-  const [staffSLider, setStaffSlider] = useState<any>();
-  const [mainContain, setMainContain] = useState<any>();
-  const [notice, setNotice] = useState<any>();
-  const [biniyojan, setBiniyojan] = useState<any>();
-  const [biniyojanamain, setBiniyojanmain] = useState<any>();
-  const [biniyojanasub, setBiniyojansub] = useState<any>();
-  const [generalInfo, setGeneralInfo] = useState<any>();
+  const [pageChange, setPageChange] = useState(false);
+  const [screenData, setScreenData] = useState(null);
+  const [officials, setOfficials] = useState<any>([]);
+  const [officialSlider, setOfficialSlider] = useState<any>([]);
+  const [staff, setStaff] = useState<any>([]);
+  const [staffSlider, setStaffSlider] = useState<any>([]);
+  const [mainContain, setMainContain] = useState<any>([]);
+  const [notice, setNotice] = useState<any>([]);
+  const [biniyojan, setBiniyojan] = useState<any>([]);
+  const [biniyojanMain, setBiniyojanMain] = useState<any>([]);
+  const [biniyojanSub, setBiniyojanSub] = useState<any>([]);
+  const [generalInfo, setGeneralInfo] = useState<any>([]);
   const [badapatraPdf, setBadapatraPdf] = useState<any>();
+  const [base64Image, setBase64Image] = useState("");
+  const [mediaList, setMediaList] = useState<any>([]);
+  const [settingData, setSettingData] = useState<any>();
+  const [palikaImages, setPalikaImages] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [wadaPatraImage, setWadaPatraImage] = useState<any>([]);
+  const [youtubeVideo, setYoutubeVideo] = useState<any>([]);
+  const [wadapatraPdf, setWadaPatraPdf] = useState<any>([]);
+  const [muteControl, setMuteControl] = useState(true);
+
+  const processAndSaveImages = async (items:any, type:any) => {
+    const promises = items.map(async (item:any, index:any) => {
+      const imageUrl = `http://202.51.74.85:6003/get-images/${item.photo || item.image}`;
+      const base64 = await urlToBase64(imageUrl);
+      item.image = base64;
+      await saveMedia(index, item, type);
+    });
+    await Promise.all(promises);
+    const media = await getAllMedia();
+    const filteredMedia = media.filter((item) => item.type === type);
+    switch (type) {
+      case "officialSlider":
+        setOfficialSlider(filteredMedia);
+        break;
+      case "officials":
+        setOfficials(filteredMedia);
+        break;
+      case "staff":
+        setStaff(filteredMedia);
+        break;
+      case "staffSlider":
+        setStaffSlider(filteredMedia);
+        break;
+      case "mainContain":
+        setMainContain(filteredMedia);
+        break;
+      default:
+        break;
+    }
+  };
+
   const GetScreenData = async () => {
     try {
       const resp = await AndroidServices.Screens1();
       if (resp.message === "fetch") {
         await saveText(15, resp, "firstpagedetail");
       }
-  
       const media = await getAllMedia();
-      const detail = media.filter((item) => item.type === "firstpagedetail");
-  
-      if (detail.length > 0 && detail[0].data) {
-        // const officialSliderPromises = detail[0].data.officalSLider.map((item:any,index:number) => 
-        //   ConvetToBase64FirstPage(item, "officialSlider",index)
-        // );
-        // await Promise.all(officialSliderPromises);
-        // const officialsPromise =  detail[0].data.officals.map((item:any,index:number) => 
-        //   ConvetToBase64FirstPage(item, "officials",index)
-        // );
-        // await Promise.all(officialsPromise);
-        // const staffPromise=detail[0].data.staff.map((item:any,index:number) => 
-        //   ConvetToBase64FirstPage(item, "staff",index)
-        // );
-        // await Promise.all(staffPromise);
-        // const staffSliderPromise=detail[0].data.staffSLider.map((item:any,index:number) => 
-        //   ConvetToBase64FirstPage(item, "staffSLider",index)
-        // );
-        // await Promise.all(staffSliderPromise);
-        // const mainContentPromise=detail[0].data.mainContain.map((item:any,index:number) => 
-        //   ConvetToBase64FirstPage(item, "mainContain",index)
-        // );
-        // await Promise.all(mainContentPromise);
-        setScreenData(detail[0].data.badaPatra[0]?.image);
-        setNotice(detail[0].data.notice);
-        setBiniyojan(detail[0].data.biniyojan);
-        setBiniyojanmain(detail[0].data.biniyojanamain);
-        setBiniyojansub(detail[0].data.biniyojanasub);
-        setGeneralInfo(detail[0].data.generalInfo);
-        setBadapatraPdf(detail[0].data.badaPatra[0]);
-        await ConvetToBase64(detail[0].data.badaPatra[0].image);
-      }
-    } catch (error) {
-      console.error("Error fetching screen data:", error);
-    }
-  };
-  const GetScreenData1 = async () => {
-    try {
-      const resp = await AndroidServices.Screens1();
-      if (resp.message === "fetch") {
-        await saveText(15, resp, "firstpagedetail");
-      }
-  
-      const media = await getAllMedia();
-      const detail = media.filter((item) => item.type === "firstpagedetail");
-  
-      if (detail.length > 0 && detail[0].data) {
-        const officialSliderPromises = detail[0].data.officalSLider.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "officialSlider",index)
-        );
-        await Promise.all(officialSliderPromises);
-       
-      }
-    } catch (error) {
-      console.error("Error fetching screen data:", error);
-    }
-  };
-  const GetScreenData2 = async () => {
-    try {
-      const resp = await AndroidServices.Screens1();
-      if (resp.message === "fetch") {
-        await saveText(15, resp, "firstpagedetail");
-      }
-  
-      const media = await getAllMedia();
-      const detail = media.filter((item) => item.type === "firstpagedetail");
-  
-      if (detail.length > 0 && detail[0].data) {
-    
-        const officialsPromise =  detail[0].data.officals.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "officials",index)
-        );
-        await Promise.all(officialsPromise);
-      
-      }
-    } catch (error) {
-      console.error("Error fetching screen data:", error);
-    }
-  };
-  const GetScreenData3 = async () => {
-    try {
-      const resp = await AndroidServices.Screens1();
-      if (resp.message === "fetch") {
-        await saveText(15, resp, "firstpagedetail");
-      }
-  
-      const media = await getAllMedia();
-      const detail = media.filter((item) => item.type === "firstpagedetail");
-  
-      if (detail.length > 0 && detail[0].data) {
-    
-        const staffPromise=detail[0].data.staff.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "staff",index)
-        );
-        await Promise.all(staffPromise);
-      
+      const detail = media.find((item) => item.type === "firstpagedetail");
+      if (detail?.data) {
+        const data = detail.data;
+        await processAndSaveImages(data.officalSLider, "officialSlider");
+        await processAndSaveImages(data.officals, "officials");
+        await processAndSaveImages(data.staff, "staff");
+        await processAndSaveImages(data.staffSLider, "staffSlider");
+        await processAndSaveImages(data.mainContain, "mainContain");
+        setScreenData(data.badaPatra[0]?.image);
+        setNotice(data.notice);
+        setBiniyojan(data.biniyojan);
+        setBiniyojanMain(data.biniyojanamain);
+        setBiniyojanSub(data.biniyojanasub);
+        setGeneralInfo(data.generalInfo);
+        setBadapatraPdf(data.badaPatra[0]);
+        await ConvetToBase64(data.badaPatra[0].image);
       }
     } catch (error) {
       console.error("Error fetching screen data:", error);
     }
   };
 
-  const GetScreenData4 = async () => {
+  const ConvetToBase64 = async (path:any) => {
+
+    const imageUrl = `http://202.51.74.85:6003/get-images/${path}`;
     try {
-      const resp = await AndroidServices.Screens1();
-      if (resp.message === "fetch") {
-        await saveText(15, resp, "firstpagedetail");
-      }
-  
-      const media = await getAllMedia();
-      const detail = media.filter((item) => item.type === "firstpagedetail");
-  
-      if (detail.length > 0 && detail[0].data) {
-      
-        const staffSliderPromise=detail[0].data.staffSLider.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "staffSLider",index)
-        );
-        await Promise.all(staffSliderPromise);
-      
-      }
-    } catch (error) {
-      console.error("Error fetching screen data:", error);
-    }
-  };
-  const GetScreenData5 = async () => {
-    try {
-      const resp = await AndroidServices.Screens1();
-      if (resp.message === "fetch") {
-        await saveText(15, resp, "firstpagedetail");
-      }
-  
-      const media = await getAllMedia();
-      const detail = media.filter((item) => item.type === "firstpagedetail");
-  
-      if (detail.length > 0 && detail[0].data) {
-       
-        const mainContentPromise=detail[0].data.mainContain.map((item:any,index:number) => 
-          ConvetToBase64FirstPage(item, "mainContain",index)
-        );
-        await Promise.all(mainContentPromise);
-   
-      }
-    } catch (error) {
-      console.error("Error fetching screen data:", error);
-    }
-  };
-
-
-
-
-
-
-
-
-
-  const [settingData, setSettingData] = useState<any>();
-  const GetSettingData = async () => {
-    var resp = await AndroidServices.Settings();
-    setSettingData(resp.data);
-  };
-
-  const [palikaImages, setPalikaImages] = useState<any>();
-  const getVideo = async () => {
-    var response = await AndroidServices.Videos();
-    if (response.code == 200) {
-      setPalikaImages(response?.data[0]?.link);
-    }
-  };
-  const [pdfFile, setPdfFile] = useState<any>();
-  const getPdf = async () => {
-    var response = await AndroidServices.Screens();
-    setPdfFile(response?.badaPatra[0]?.image);
-    // ConvetToBase64(response?.badaPatra[0]?.image)
-    let images = convert(ApiEndPoints.api + response?.badaPatra[0]?.image);
-  };
-
-  const [base64Image, setBase64Image] = useState("");
-  const [mediaList, setMediaList] = useState<any>([]);
-
-  const handleImageUpload = async (event: any) => {
-    await saveMedia(19, event, "badapatrapdf");
-    const media = await getAllMedia();
-    setMediaList(media);
-    let data = media.filter((item: any) => item.type == "badapatrapdf");
-    setWadaPatraImage(data);
-  };
-  const [wadaPatraImage, setWadaPatraImage] = useState<any>();
-
-  const ConvetToBase64FirstPage = async (path:any, name:any,index:any) => {    
-    const imageUrl = `http://202.51.74.85:6003/get-images/${path.photo}`;
-    try {
-      const base64 = await urlToBase64(imageUrl);
-      if (imageUrl) {
-        // await handleImageUploadFirstPage(base64, path, name);
-        let count = 10;
-
-        path.image = base64;
-        await saveMedia( index, path, name);
-        const media = await getAllMedia();
-        setMediaList(media);
-        const data = media.filter((item) => item.type === name);
-        if (name === "officialSlider") {
-          setOfficialSlider(data);
-        }
-        if (name === "officials") {
-          setOfficials(data);
-        }
-        if(name=="staff"){
-          setStaff(data)
-        }
-        if(name=="staffSLider"){
-          setStaffSlider(data)
-        }
-        if(name=="mainContain"){
-          setMainContain(data)
-        }
-
-      }
+      const base64:any = await urlToBase64(imageUrl);
+      setBase64Image(base64);
+      await handleImageUpload(base64);
     } catch (error) {
       console.error("Error converting to base64:", error);
     }
   };
-  
-  
-  // const handleImageUploadFirstPage = async (event:any, originaldata:any, keyname:any) => {
-  //   originaldata.image = event;
-  //   await saveMedia(count + 1, originaldata, keyname);
-  //   const media = await getAllMedia();
-  //   setMediaList(media);
-  //   const data = media.filter((item) => item.type === keyname);
-  //   if (keyname === "officialSlider") {
-  //     setOfficialSlider(data);
-  //   }
-  // };
-  
+
+  const handleImageUpload = async (event:any) => {
+    debugger
+    await saveMedia(19, event, "badapatrapdf");
+    const media = await getAllMedia();
+    setMediaList(media);
+    const filteredMedia = media.filter((item) => item.type === "badapatrapdf");
+    setWadaPatraImage(filteredMedia);
+  };
+  console.log("badapatra",wadaPatraImage);
   
 
-  const ConvetToBase64 = async (path: string) => {
-    const imageUrl = "http://202.51.74.85:6003/get-images/" + path;
-    urlToBase64(imageUrl).then((base64: any) => {
-      if (imageUrl) setBase64Image(base64);
-      handleImageUpload(base64);
-    });
-  };
-  const [wadapatraPdf, setWadaPatraPdf] = useState<any>();
-  const [youtubeVideo, setYoutubeVideo] = useState<any>();
   const fetchMedia = async () => {
     setWadaPatraImage([]);
     const media = await getAllMedia();
-
     setMediaList(media);
-    setYoutubeVideo(media.filter((item: any) => item.type == "youtube"));
-    setWadaPatraPdf(media.filter((item: any) => item.type == "wadapatrapdf"));
+    setYoutubeVideo(media.filter((item) => item.type === "youtube"));
+    setWadaPatraPdf(media.filter((item) => item.type === "wadapatrapdf"));
   };
-  let palikaLength: any = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10.11, 12, 13, 14, 15];
 
+  const getVideo = async () => {
+    const response = await AndroidServices.Videos();
+    if (response.code === 200) {
+      setPalikaImages(response?.data[0]?.link);
+    }
+  };
+
+  const getPdf = async () => {
+    const response = await AndroidServices.Screens();
+    setPdfFile(response?.badaPatra[0]?.image);
+    const images = convert(ApiEndPoints.api + response?.badaPatra[0]?.image);
+  };
+
+  const GetSettingData = async () => {
+    const resp = await AndroidServices.Settings();
+    setSettingData(resp.data);
+  };
 
   useEffect(() => {
     fetchMedia();
-    // getWadaPatraImages()
   }, []);
 
   useEffect(() => {
@@ -431,22 +284,24 @@ export default function Gaupalika() {
 
   useEffect(() => {
     GetScreenData();
-    GetScreenData1();
-    GetScreenData2();
-    GetScreenData3();
-    GetScreenData4();
-    GetScreenData5();
-
     GetSettingData();
   }, []);
-  console.log(mainContain);
-  
-  const [muteControl, setMuteControl] = useState<boolean>(true);
-  setTimeout(() => {
-    setMuteControl(false);
-  }, 2000);
-  setTimeout(() => { setPageChange(!pageChange) }, 60 * 1000)
 
+  // useEffect(() => {
+  //   const timeoutId = setTimeout(() => setMuteControl(false), 2000);
+  //   return () => clearTimeout(timeoutId);
+  // }, []);
+
+  // setTimeout(()=>{setMuteControl(false)},2000)
+  console.log(youtubeVideo);
+  
+  useEffect(() => {
+    const intervalId = setInterval(() => {setPageChange((prev) => !prev)
+      setMuteControl(false)
+    }, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
+  const palikaLength=[1,2,3,4,5,6,7,8,9,10,11,12,13,14]
   return (
     <>
       {pageChange == false && (
@@ -593,24 +448,14 @@ export default function Gaupalika() {
                             style={{ width: "100%", height: "100%" }}
                           >
                             <div className="d-flex gap-1 h-100">
-                              {item?.data?.image ? (
+                            
                                 <img
                                   style={{ width: "40%", height: "100%" }}
                                   className=" object-cover aspect-auto"
                                   alt={`${item?.data?.name}`}
                                   src={item?.data?.image}
                                 />
-                              ) : (
-                                <img
-                                  style={{ width: "40%", height: "100%" }}
-                                  className=" object-cover aspect-auto"
-                                  alt={`${item?.data?.name}`}
-                                  src={
-                                    ApiEndPoints.hostUrl +
-                                    "assets/images/profile.jpg"
-                                  }
-                                />
-                              )}
+                              
                               <div
                                 className="d-flex flex-column justify-content-between py-2"
                                 style={{ width: "60%", height: "100%" }}
@@ -708,11 +553,11 @@ export default function Gaupalika() {
                         })}
                     </div>
                     <div className=" d-flex flex-column gap-4 px-2 h-[27vh] justify-between staff-slider">
-                      {staffSLider && staffSLider?.length > 0 && (
+                      {staffSlider && staffSlider?.length > 0 && (
                         <div className="vertical-carousel">
                           <Slider {...settings}>
-                            {staffSLider &&
-                              staffSLider.map((item: any, index: number) => (
+                            {staffSlider &&
+                              staffSlider.map((item: any, index: number) => (
                                 <div
                                   key={index}
                                   className="d-flex gap-4 h-[15.5vh] p-1"
@@ -845,9 +690,9 @@ export default function Gaupalika() {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {biniyojanasub &&
-                                    biniyojanasub?.length > 0 &&
-                                    biniyojanasub.map(
+                                  {biniyojanSub &&
+                                    biniyojanSub?.length > 0 &&
+                                    biniyojanSub.map(
                                       (item: any, index: number) => {
                                         return (
                                           <tr
@@ -964,9 +809,9 @@ export default function Gaupalika() {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {biniyojanamain &&
-                                    biniyojanamain?.length > 0 &&
-                                    biniyojanamain.map(
+                                  {biniyojanMain &&
+                                    biniyojanMain?.length > 0 &&
+                                    biniyojanMain.map(
                                       (item: any, index: number) => {
                                         return (
                                           <tr
@@ -1043,9 +888,10 @@ export default function Gaupalika() {
               loop
               muted={muteControl}
               src={
-                youtubeVideo
-                  ? youtubeVideo[0]?.data
-                  : "/assets/video/himali.mp4"
+                // youtubeVideo
+                //   ? youtubeVideo[0]?.data
+                //   :
+                   "/assets/video/himali.mp4"
               }
               width={"100%"}
               height={"100%"}
