@@ -498,7 +498,7 @@ export default function Gaupalika() {
             </div>
           </section>
           <section className="main-content">
-            <div className="d-flex" style={{ height: "62vh" }}>
+            <div className="d-flex" style={{ height: "63vh" }}>
               <div className="d-flex flex-column " style={{ width: "25%" }}>
                 <label className="text-white bg-thm-blue w-100 h-[3vh] d-flex align-items-center justify-content-center">
                   कर्मचारिहरु
@@ -868,9 +868,9 @@ export default function Gaupalika() {
               </div>
             </div>
           </section>
-          <section className="footer">
-            <div className="absolute bottom-0 bg-thm-red flex w-full justify-content-center text-white py-1 h-[4vh] align-items-center z-10">
-              <label>Powered By GrayCode Technology Pvt. Ltd.</label>
+          <section className="position-relative">
+            <div className="position-absolute bottom-0 mt-2 bg-thm-red flex w-full justify-content-center text-white py-1 h-[4vh] align-items-center z-10">
+              <label>Powered By Encraft Technologies Pvt. Ltd.</label>
             </div>
           </section>
         </div>
