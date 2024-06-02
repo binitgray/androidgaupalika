@@ -169,7 +169,7 @@ export default function Gaupalika() {
       const imageUrl = `http://202.51.74.85:6003/get-images/${item.photo || item.image}`;
       const base64 = await urlToBase64(imageUrl);
       item.image = base64;
-      await saveMedia(index, item, type);
+      await saveMedia(item._id, item, type);
     });
     await Promise.all(promises);
     const media = await getAllMedia();
@@ -217,34 +217,34 @@ export default function Gaupalika() {
         setBiniyojanSub(data.biniyojanasub);
         setGeneralInfo(data.generalInfo);
         setBadapatraPdf(data.badaPatra[0]);
-        await ConvetToBase64(data.badaPatra[0].image);
+        await ConvetToBase64(data.badaPatra);
       }
     } catch (error) {
       console.error("Error fetching screen data:", error);
     }
   };
+  console.log(officialSlider,"officil");
+  
 
   const ConvetToBase64 = async (path:any) => {
 
-    const imageUrl = `http://202.51.74.85:6003/get-images/${path}`;
+    const imageUrl = `http://202.51.74.85:6003/get-images/${path[0]?.image}`;
     try {
       const base64:any = await urlToBase64(imageUrl);
       setBase64Image(base64);
-      await handleImageUpload(base64);
+      await handleImageUpload(base64,path);
     } catch (error) {
       console.error("Error converting to base64:", error);
     }
   };
 
-  const handleImageUpload = async (event:any) => {
-    debugger
-    await saveMedia(19, event, "badapatrapdf");
+  const handleImageUpload = async (event:any,data:any) => {
+    await saveMedia(data[0]?._id, event, "badapatrapdf");
     const media = await getAllMedia();
     setMediaList(media);
     const filteredMedia = media.filter((item) => item.type === "badapatrapdf");
     setWadaPatraImage(filteredMedia);
   };
-  console.log("badapatra",wadaPatraImage);
   
 
   const fetchMedia = async () => {

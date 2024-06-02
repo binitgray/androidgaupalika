@@ -11,10 +11,12 @@ export default function Navbar() {
   const getHeader = async () => {
     var response = await AndroidServices.Screens1();
     if ((response.message=="fetch")) {
-      await saveText(14, response?.screenInfo, "headerInfo");
+      await saveText(response?.screenInfo?._id, response?.screenInfo, "headerInfo");
     }
     const media = await getAllMedia();
-    setHeaderData(media.filter((item: any) => item.type == "headerInfo"));
+    setHeaderData(media &&media.filter((item: any) => item.type == "headerInfo"));
+    console.log(media &&media.filter((item: any) => item.type == "headerInfo"),"header");
+
   };
   const date = new Date();
   const hour = date.getHours();
@@ -30,6 +32,8 @@ export default function Navbar() {
       ?.join("");
   }
 
+  console.log(headerData,"header");
+  
   const [weatherDetail, setWeatherDetail] = useState<any>();
   const getWeather = async () => {
     try {

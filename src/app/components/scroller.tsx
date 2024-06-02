@@ -15,6 +15,8 @@ export default function Scroller() {
         let marqnews=media.filter((item:any)=>item.type=="marqueenews")
         setMarqueeNew(marqnews[0].data)
     }
+    console.log(marqueeNews,"mar");
+    
     
     useEffect(()=>{getScrollerContent()},[])
     return (
