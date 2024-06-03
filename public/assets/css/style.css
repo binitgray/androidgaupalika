@@ -1,7 +1,25 @@
-body {
+/* body {
     height: 100vh;
     overflow: hidden;
-}
+} */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+  
+  @media (max-width: 600px) {
+    .container {
+      padding: 0 10px;
+    }
+  }
 
 .slider .react-multi-carousel-list,
 .slider .react-multi-carousel-track,
