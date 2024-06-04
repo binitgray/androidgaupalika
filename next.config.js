@@ -1,4 +1,3 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
 const {
   PHASE_DEVELOPMENT_SERVER,
   PHASE_PRODUCTION_BUILD,
@@ -13,28 +12,29 @@ const withPWA = require("next-pwa")({
 });
 module.exports = {
   async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://202.51.74.85', 
-      },
-    ];
+      return [
+          {
+              source: '/api/:path*',
+              destination: 'http://202.51.74.85/' // Proxy to Backend
+          }
+      ];
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Proxy API requests to the backend server in development mode
-      config.devServer = {
-        ...config.devServer,
-        proxy: {
-          '/api': {
-            target: 'http://202.51.74.85',
-            changeOrigin: true,
-          },
-        },
-      };
-    }
-    return config;
-  },
+  async server({ dev }) {
+      if (!dev) {
+          const express = require('express');
+          const { createProxyMiddleware } = require('http-proxy-middleware');
+
+          const app = express();
+
+          app.use('/api', createProxyMiddleware({
+              target: 'http://202.51.74.85/',
+              changeOrigin: true,
+              pathRewrite: { '^/api': '' },
+          }));
+
+          return app;
+      }
+  }
 };
 
 module.exports = (phase) => {
