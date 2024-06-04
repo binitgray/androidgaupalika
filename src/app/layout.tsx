@@ -25,8 +25,7 @@ export default function RootLayout({
     <html lang="en">
       <link rel="stylesheet" type="text/css" href="/assets/css/style.css"></link>
       <body className={inter.className}>
-        <Navbar/>
-        <Scroller/>
+      
         {children}</body>
     </html>
   );

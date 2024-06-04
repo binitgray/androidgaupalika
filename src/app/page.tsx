@@ -13,6 +13,8 @@ import { getAllMedia, saveMedia, saveText } from "@/utils/indexdb";
 // import { urlToBase64 } from "../api/base64";
 import { useRouter } from "next/navigation";
 import { urlToBase64 } from "./api/base64";
+import Navbar from "./components/navbar";
+import Scroller from "./components/scroller";
 
 export default function Gaupalika() {
   const responsive = {
@@ -198,6 +200,7 @@ export default function Gaupalika() {
     }
   };
 
+  const [isLoading,setIsLoading]=useState<boolean>(true)
   const GetScreenData = async () => {
     try {
       const resp = await AndroidServices.Screens1();
@@ -222,6 +225,7 @@ export default function Gaupalika() {
         setGeneralInfo(data.generalInfo);
         setBadapatraPdf(data.badaPatra[0]);
         await ConvetToBase64(data.badaPatra);
+        setIsLoading(false)
       }
    
     } catch (error) {
@@ -308,6 +312,12 @@ export default function Gaupalika() {
   const palikaLength=[1,2,3,4,5,6,7,8,9,10,11,12,13,14]
   return (
     <>
+    {isLoading? <div className="d-flex justify-content-center align-items-center h-screen">
+      <div className="loader" style={{width:"50px",height:"50px"}}></div>
+      </div>:
+      <div>
+          <Navbar/>
+        <Scroller/>
       {pageChange == false && (
         <div>
           <section className="members">
@@ -635,7 +645,7 @@ export default function Gaupalika() {
                          
                                 <img
                                   className="w-100 h-[59vh] border border-right border-left border-light"
-                                  style={{ objectFit: "contain" }}
+                                  style={{ objectFit: "fill" }}
                                   alt={`${item?.data?.title}`}
                                   src={item?.data?.image}
                                 />
@@ -944,6 +954,7 @@ export default function Gaupalika() {
           </div>
         </div>
       )}
+      </div>}
     </>
   );
 }

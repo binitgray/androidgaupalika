@@ -15,7 +15,7 @@ module.exports = {
       return [
           {
               source: '/api/:path*',
-              destination: 'http://202.51.74.85/' // Proxy to Backend
+              destination: 'http://202.51.74.85/', // Proxy to Backend
           }
       ];
   },
@@ -41,11 +41,14 @@ module.exports = (phase) => {
   if (phase === PHASE_DEVELOPMENT_SERVER || phase === PHASE_PRODUCTION_BUILD) {
     return withPWA({
       reactStrictMode: true,
+crossOrigin:"anonymous"
       // Any other next.js configurations can go here
     });
   }
   return {
     reactStrictMode: true,
+    crossOrigin:"anonymous"
+
     // Any other next.js configurations can go here
   };
 };

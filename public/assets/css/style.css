@@ -6,6 +6,7 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow: hidden;
   }
   
   .container {
@@ -79,3 +80,13 @@ body {
 .vertical-carousel-item:not(.react-multi-carousel-item--active) {
     display: none;
 }
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 8px solid lightblue;
+    border-right-color: orange;
+    animation: l2 1s infinite linear;
+  }
+  @keyframes l2 {to{transform: rotate(1turn)}}

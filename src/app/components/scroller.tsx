@@ -33,6 +33,8 @@ export default function Scroller() {
                           
                         </Marquee>
                     </div>
+                    <span className="d-flex align-items-center justify-content-center px-1 font-bold text-xl 2xl:p-3 text-white bg-danger w-[4%] " ></span>
+
                 </div>
             </section>
         </>
