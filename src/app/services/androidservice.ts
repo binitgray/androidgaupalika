@@ -1,11 +1,12 @@
 import API from './api';
 import request from '../config/request';
 import { ApiEndPoints } from '../config/apiconfig';
+import requesetManager from '../config/requetManager';
 ;
 interface ApiResponse {
-    data?: any;
+    Data?: any;
     Message: string;
-    code: number;
+    Code: number;
 }
 
 
@@ -93,6 +94,19 @@ class AndroidService {
                 Message: error?.message,
                 code: error?.code,
                 data: null,
+            }
+        }
+    }
+    public async GetTeamsListbyKey(pageNo: number, pageSize: number, key: string, language?: string): Promise<ApiResponse> {
+        try {
+            const resp = await (await requesetManager()).get(API.TeamsFromKey + "?pageNo=" + pageNo + "&pageSize=" + pageSize + "&key=" + key + "&language=" + language)            
+            return resp.data
+
+        } catch (error: any) {
+            return {
+                Message: error.Message,
+                Data: null,
+                Code: error.status
             }
         }
     }

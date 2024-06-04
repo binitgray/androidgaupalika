@@ -2,8 +2,7 @@
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
-import AndroidServices from "./services/androidservice";
-import { ApiEndPoints } from "./config/apiconfig";
+
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -13,8 +12,11 @@ import { getAllMedia, saveMedia, saveText } from "@/utils/indexdb";
 // import { urlToBase64 } from "../api/base64";
 import { useRouter } from "next/navigation";
 import { urlToBase64 } from "./api/base64";
+import AndroidServices from "./services/androidservice";
+import { ApiEndPoints } from "./config/apiconfig";
 import Navbar from "./components/navbar";
 import Scroller from "./components/scroller";
+
 
 export default function Gaupalika() {
   const responsive = {
@@ -199,7 +201,41 @@ export default function Gaupalika() {
         break;
     }
   };
+  const processAndSaveImagesGray = async (items:any, type:any) => {
+      const promises = items?.map(async (item:any, index:any) => {
+      const imageUrl = `https://api.graycode.com.np/${item.ProfileImagePath}`;
+      const base64 = await urlToBase64(imageUrl);
+      item.image = base64;
+      if(item.ProfileImagePath){
+        await saveMedia(item.Id, item, type);
+      }
+    });
+    await Promise.all(promises);
+    const media = await getAllMedia();
+    const filteredMedia = media.filter((item) => item.type === type);
+    switch (type) {
+      case "officialSlider":
+        setOfficialSlider(filteredMedia);
+        break;
+      case "officials":
+        setOfficials(filteredMedia);
+        break;
+      case "staff":
+        setStaff(filteredMedia);
+        break;
+      case "staffSlider":
+        setStaffSlider(filteredMedia);
+        break;
+      case "mainContain":
+        setMainContain(filteredMedia);
+        break;
+      default:
+        break;
+    }
+  };
 
+  console.log(officials);
+  
   const [isLoading,setIsLoading]=useState<boolean>(true)
   const GetScreenData = async () => {
     try {
@@ -280,8 +316,56 @@ export default function Gaupalika() {
     const resp = await AndroidServices.Settings();
     setSettingData(resp.data);
   };
+  
+  const GetExeTeams = async () => {
+    var resp = await AndroidServices.GetTeamsListbyKey(1, 99, "Gau-Palika-tems","en");
+    if (resp.Code == 200) {
+      debugger
+      await saveText(resp.Data.SettingKey, resp.Data.TeamListVM, "firstpagedetail");
+    }
+    const media = await getAllMedia();
+    const detail = media.find((item) => item.type === "firstpagedetail");
+    if (detail?.data) {
+        const data = detail.data;
+        await processAndSaveImagesGray(data, "officials");
+        setIsLoading(false)
+      }
+};
+
+
+const GetEmployeeTeams = async () => {
+    var resp = await AndroidServices.GetTeamsListbyKey(1, 99, "Gau-Palika-Team-Employee","en");
+    if (resp.Code == 200) {
+      await saveText(resp.Data.SettingKey, resp.Data.TeamListVM, "firstEmployeedetail");
+    }
+    const media = await getAllMedia();
+    const detail = media.find((item) => item.type === "firstEmployeedetail");
+    if (detail?.data) {
+        const data = detail.data;
+    //    await processAndSaveImagesGray(data, "officialSlider");
+        // await processAndSaveImagesGray(data, "officials");
+        // await processAndSaveImages(data.staff, "staff");
+        await processAndSaveImagesGray(data, "staffSlider");
+        // await processAndSaveImages(data.mainContain, "mainContain");
+        // setScreenData(data.badaPatra[0]?.image);
+        // setNotice(data.notice);
+        // setBiniyojan(data.biniyojan);
+        // setBiniyojanMain(data.biniyojanamain);
+        // setBiniyojanSub(data.biniyojanasub);
+        // setGeneralInfo(data.generalInfo);
+        // setBadapatraPdf(data.badaPatra[0]);
+        // await ConvetToBase64(data.badaPatra);
+        setIsLoading(false)
+      }
+};
+
+console.log("official",officials);
+console.log("staff",staffSlider);
+
 
   useEffect(() => {
+    GetExeTeams()
+    GetEmployeeTeams()
     fetchMedia();
   }, []);
 
@@ -291,7 +375,7 @@ export default function Gaupalika() {
   }, []);
 
   useEffect(() => {
-    GetScreenData();
+    // GetScreenData();
     GetSettingData();
   }, []);
 
@@ -301,7 +385,7 @@ export default function Gaupalika() {
   // }, []);
 
   // setTimeout(()=>{setMuteControl(false)},2000)
-  console.log(youtubeVideo);
+
   
   useEffect(() => {
     const intervalId = setInterval(() => {setPageChange((prev) => !prev)
@@ -390,8 +474,9 @@ export default function Gaupalika() {
                 style={{ width: "48%", height: "100%" }}
               >
                 {officials &&
-                  officials?.length > 0 &&
-                  officials.map((item: any, index: number) => {
+                  officials?.length > 3 &&
+                  officials?.slice(0,3)?.map((item: any, index: number) => {
+                    
                     return (
                       <div
                         key={index}
@@ -402,7 +487,7 @@ export default function Gaupalika() {
                             <img
                               style={{ width: "40%", height: "100%" }}
                               className=" object-cover aspect-auto"
-                              alt={`${item?.data?.name}`}
+                              alt={`${item?.data?.FullName}`}
                               src={
                                item?.data?.image
                               }
@@ -416,13 +501,13 @@ export default function Gaupalika() {
                                 className=" text-md  font-bold text-wrap "
                                 style={{ margin: "-4px", width: "100%" }}
                               >
-                                {item?.data?.name}
+                                {item?.data?.FullName}
                               </div>
                               <div
                                 className="  color-thm-green"
                                 style={{ margin: "-4px" }}
                               >
-                                {item?.data?.position}
+                                {item?.data?.Title}
                               </div>
                             </div>
                             <div className="d-flex relative align-items-center gap-3">
@@ -435,7 +520,7 @@ export default function Gaupalika() {
                                 <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z"></path>
                               </svg>
                               <span className="ml-4 text-base color-thm-red color-thm-red">
-                                {item?.data?.contact_number}
+                                {item?.data?.MessageContent}
                               </span>
                             </div>
                           </div>
@@ -445,7 +530,7 @@ export default function Gaupalika() {
                   })}
               </div>
               <div className="slider " style={{ width: "32%", height: "100%" }}>
-                {officialSlider && officialSlider?.length > 0 && (
+                {officials && officials?.length > 0 && (
                   <Carousel
                     responsive={responsive}
                     arrows={false}
@@ -453,8 +538,8 @@ export default function Gaupalika() {
                     autoPlaySpeed={4000}
                     infinite
                   >
-                    {officialSlider &&
-                      officialSlider.map((item: any, index: number) => {
+                    {officials &&
+                      officials?.slice(3).map((item: any, index: number) => {
                         return (
                           <div
                             key={index}
@@ -466,7 +551,7 @@ export default function Gaupalika() {
                                 <img
                                   style={{ width: "40%", height: "100%" }}
                                   className=" object-cover aspect-auto"
-                                  alt={`${item?.data?.name}`}
+                                  alt={`${item?.data?.FullName}`}
                                   src={item?.data?.image}
                                 />
                               
@@ -479,13 +564,13 @@ export default function Gaupalika() {
                                     className=" text-md whitespace-nowrap font-bold "
                                     style={{ margin: "-4px", width: "100%" }}
                                   >
-                                    {item?.data?.name}
+                                    {item?.data?.FullName}
                                   </div>
                                   <div
                                     className="   whitespace-nowrap overflow-hidden color-thm-green"
                                     style={{ margin: "-4px" }}
                                   >
-                                    {item?.data?.position}
+                                    {item?.data?.Title}
                                   </div>
                                 </div>
                                 <div className="d-flex relative align-items-center gap-3">
@@ -498,7 +583,7 @@ export default function Gaupalika() {
                                     <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z"></path>
                                   </svg>
                                   <span className="ml-4 text-base color-thm-red">
-                                    {item?.data?.contact_number}
+                                    {item?.data?.MessageContent}
                                   </span>
                                 </div>
                               </div>
@@ -520,9 +605,9 @@ export default function Gaupalika() {
                 <div className="d-flex h-[59vh]">
                   <div className="d-flex flex-col w-[20vw] py-2">
                     <div className="d-flex flex-col  px-2 h-[31vh] justify-between">
-                      {staff &&
-                        staff.length > 0 &&
-                        staff.map((item: any, index: number) => {
+                      {staffSlider &&
+                        staffSlider.length > 0 &&
+                        staffSlider?.slice(0,2)?.map((item: any, index: number) => {
                           return (
                             <div
                               key={index}
@@ -530,19 +615,19 @@ export default function Gaupalika() {
                             >
                               <img
                                 className="h-[13vh] w-[6vw] object-cover aspect-auto"
-                                alt={`${item?.data?.name}`}
+                                alt={`${item?.data?.FullName}`}
                                 src={item?.data?.image}
                               />
                               <div className="d-flex flex-column justify-content-between ">
                                 <div>
                                   <div className=" text-lg whitespace-nowrap font-bold">
-                                    {item?.data?.name}
+                                    {item?.data?.FullName}
                                   </div>
                                   <div className=" color-thm-green whitespace-nowrap overflow-hidden">
-                                    {item?.data?.position}
+                                    {item?.data?.Title}
                                   </div>
                                 </div>
-                                {item?.data?.contact_number && (
+                                {item?.data?.MessageContent && (
                                   <div className="d-flex relative align-items-center gap-3">
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
@@ -553,7 +638,7 @@ export default function Gaupalika() {
                                       <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z"></path>
                                     </svg>
                                     <span className="ml-4 text-base color-thm-red">
-                                      {item?.data?.contact_number}
+                                      {item?.data?.MessageContent}
                                     </span>
                                   </div>
                                 )}
@@ -571,26 +656,26 @@ export default function Gaupalika() {
                         <div className="vertical-carousel">
                           <Slider {...settings}>
                             {staffSlider &&
-                              staffSlider.map((item: any, index: number) => (
+                              staffSlider?.slice(3)?.map((item: any, index: number) => (
                                 <div
                                   key={index}
                                   className="d-flex gap-4 h-[15.5vh] p-1"
                                 >
                                   <img
                                     className="h-[13vh] w-[6vw] object-cover aspect-auto"
-                                    alt={`${item?.data?.name}`}
+                                    alt={`${item?.data?.FullName}`}
                                     src={item?.data?.image}
                                   />
                                   <div className="d-flex flex-column justify-content-between">
                                     <div>
                                       <div className="text-lg whitespace-nowrap font-bold">
-                                        {item?.data?.name}
+                                        {item?.data?.FullName}
                                       </div>
                                       <div className=" color-thm-green whitespace-nowrap overflow-hidden">
-                                        {item?.data?.position}
+                                        {item?.data?.Title}
                                       </div>
                                     </div>
-                                    {item?.data?.contact_number && (
+                                    {item?.data?.MessageContent && (
                                       <div className="d-flex relative align-items-center gap-3">
                                         <svg
                                           xmlns="http://www.w3.org/2000/svg"
@@ -601,7 +686,7 @@ export default function Gaupalika() {
                                           <path d="M21 16.42V19.9561C21 20.4811 20.5941 20.9167 20.0705 20.9537C19.6331 20.9846 19.2763 21 19 21C10.1634 21 3 13.8366 3 5C3 4.72371 3.01545 4.36687 3.04635 3.9295C3.08337 3.40588 3.51894 3 4.04386 3H7.5801C7.83678 3 8.05176 3.19442 8.07753 3.4498C8.10067 3.67907 8.12218 3.86314 8.14207 4.00202C8.34435 5.41472 8.75753 6.75936 9.3487 8.00303C9.44359 8.20265 9.38171 8.44159 9.20185 8.57006L7.04355 10.1118C8.35752 13.1811 10.8189 15.6425 13.8882 16.9565L15.4271 14.8019C15.5572 14.6199 15.799 14.5573 16.001 14.6532C17.2446 15.2439 18.5891 15.6566 20.0016 15.8584C20.1396 15.8782 20.3225 15.8995 20.5502 15.9225C20.8056 15.9483 21 16.1633 21 16.42Z"></path>
                                         </svg>
                                         <span className="ml-4 text-base color-thm-red">
-                                          {item?.data?.contact_number}
+                                          {item?.data?.MessageContent}
                                         </span>
                                       </div>
                                     )}
@@ -958,3 +1043,5 @@ export default function Gaupalika() {
     </>
   );
 }
+
+
