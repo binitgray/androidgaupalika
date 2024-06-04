@@ -169,7 +169,10 @@ export default function Gaupalika() {
       const imageUrl = `http://202.51.74.85:6003/get-images/${item.photo || item.image}`;
       const base64 = await urlToBase64(imageUrl);
       item.image = base64;
-      await saveMedia(item._id, item, type);
+      if(item.photo && item.image){
+        await saveMedia(item._id, item, type);
+
+      }
     });
     await Promise.all(promises);
     const media = await getAllMedia();
@@ -200,6 +203,7 @@ export default function Gaupalika() {
       const resp = await AndroidServices.Screens1();
       if (resp.message === "fetch") {
         await saveText(15, resp, "firstpagedetail");
+       
       }
       const media = await getAllMedia();
       const detail = media.find((item) => item.type === "firstpagedetail");
@@ -219,11 +223,11 @@ export default function Gaupalika() {
         setBadapatraPdf(data.badaPatra[0]);
         await ConvetToBase64(data.badaPatra);
       }
+   
     } catch (error) {
       console.error("Error fetching screen data:", error);
     }
   };
-  console.log(officialSlider,"officil");
   
 
   const ConvetToBase64 = async (path:any) => {
