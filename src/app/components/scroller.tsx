@@ -6,19 +6,22 @@ import { getAllMedia, saveText } from "@/utils/indexdb";
 
 export default function Scroller() {
     const [marqueeNews,setMarqueeNew]=useState<any>()
-    const getScrollerContent = async()=>{
-        var response  = await AndroidServices.Screens()
-        if ((response.message=="fetch")) {
-            await saveText(response?.marqueeNews[0]?._id,response?.marqueeNews[0],"marqueenews")
+
+
+    const GetNoticeScroller = async () => {
+        var resp = await AndroidServices.GetNoticeScrollerList(1, 99, "Gau-Palika-Notice-Scroller", "en");
+        if (resp.Code == 200) {
+        await saveText(resp?.Data.SettingKey,resp?.Data?.NoticeScrollerListVM,"marqueenews")
+
         }
         const media = await getAllMedia();
         let marqnews=media.filter((item:any)=>item.type=="marqueenews")
         setMarqueeNew(marqnews[0].data)
-    }
-    console.log(marqueeNews,"mar");
+      };
+
     
     
-    useEffect(()=>{getScrollerContent()},[])
+    useEffect(()=>{GetNoticeScroller()},[])
     return (
         <>
             <section className="scroller">
@@ -26,12 +29,23 @@ export default function Scroller() {
                     <span className="d-flex align-items-center justify-content-center px-1 font-bold text-xl 2xl:p-3 text-white bg-danger w-[6%] " >सुचना</span>
                     <div className=" d-flex align-items-center text-white  text-lg  w-[94%] ms-auto " style={{ backgroundColor: "#3460b9" }}>
                         
-                        <Marquee>
-                            <div className="child ">
-                                <span>{marqueeNews && marqueeNews?.content}                                                                         । </span>
+                    {marqueeNews &&marqueeNews?.length > 0 && (
+                  <div className="text">
+                    <Marquee>
+                      <div className="d-flex ">
+                        {marqueeNews.map((item: any, index: number) => {
+                          return (
+                            <div className=""  key={index}>
+                            
+                                <p className="text-center mt-3">{item?.NoticeTitle ?? ""}</p>
+                              
                             </div>
-                          
-                        </Marquee>
+                          )
+                        })}
+                      </div>
+                    </Marquee>
+                    </div>)
+                    }
                     </div>
                     <span className="d-flex align-items-center justify-content-center px-1 font-bold text-xl 2xl:p-3 text-white bg-danger w-[4%] " ></span>
 

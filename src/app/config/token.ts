@@ -14,7 +14,7 @@ interface ApiResponse {
 export default class TokenManager {
         public async GetToken(): Promise<ApiResponse> {
         try {
-         var url=ApiEndPoints.baseUrl+'/connect/token';
+         var url="https://api.graycode.com.np"+'/connect/token';
          var param={
             client_id:'client',
             client_secret:'secret',

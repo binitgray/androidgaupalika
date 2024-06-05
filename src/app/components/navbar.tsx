@@ -3,20 +3,23 @@ import { useEffect, useState } from "react";
 import AndroidServices from "../services/androidservice";
 import NepaliDate from "nepali-date-converter";
 import { getAllMedia, saveText } from "@/utils/indexdb";
-import { error } from "console";
 import axios from "axios";
 
 export default function Navbar() {
   const [headerData, setHeaderData] = useState<any>();
-  const getHeader = async () => {
-    var response = await AndroidServices.Screens1();
-    if ((response.message=="fetch")) {
-      await saveText(response?.screenInfo?._id, response?.screenInfo, "headerInfo");
+
+  const GetNaveHtml = async () => {
+    var resp = await AndroidServices.GetHtmlContentList(
+      1,
+      99,
+      "	Gau-Palika",
+      "en"
+    );
+    if (resp.Code == 200) {
+      await saveText(resp?.Data.SettingKey, resp?.Data?.HtmlContentVM[0], "headerInfo");
     }
     const media = await getAllMedia();
     setHeaderData(media &&media.filter((item: any) => item.type == "headerInfo"));
-    console.log(media &&media.filter((item: any) => item.type == "headerInfo"),"header");
-
   };
   const date = new Date();
   const hour = date.getHours();
@@ -32,7 +35,6 @@ export default function Navbar() {
       ?.join("");
   }
 
-  console.log(headerData,"header");
   
   const [weatherDetail, setWeatherDetail] = useState<any>();
   const getWeather = async () => {
@@ -53,8 +55,9 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    GetNaveHtml()
     getWeather();
-    getHeader();
+    // getHeader();
   }, []);
   return (
     <>
@@ -91,7 +94,8 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          <div className="d-flex flex-column align-items-center" style={{width:"45%"}}>
+          <div dangerouslySetInnerHTML={{__html:headerData &&headerData[0]?.data.ContentHtml}}></div>
+          {/* <div className="d-flex flex-column align-items-center" style={{width:"45%"}}>
             <label
               className="font-bold "
               style={{ color: "#3460b9", lineHeight: "1.5rem" }}
@@ -116,7 +120,7 @@ export default function Navbar() {
             >
               {headerData && headerData[0]?.data?.heading_4}
             </label>
-          </div>
+          </div> */}
           <div className="d-flex align-items-center gap-2" style={{width:"27.5%"}}>
             <div className="d-flex align-items-center gap-2">
               <svg

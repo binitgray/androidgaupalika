@@ -16,4 +16,10 @@ export default API = {
   Weather:
     "http://dataservice.accuweather.com/forecasts/v1/hourly/1hour/241809?apikey=92qhweritEx8Ag7GIb3VAdg2XGrvEvDp",
   TeamsFromKey: ApiEndPoints.baseUrl1 + "/teams/list/SettingKey",
+  HtmlFromKey: ApiEndPoints.baseUrl1 + "/htmlcontent/list/bySettingkey",
+  HtmlbyPage: ApiEndPoints.baseUrl1 + "/htmlcontent/list/HtmlContentByPage",
+  NoticeScrollerPublished:ApiEndPoints.baseUrl1+"/noticescroller/list/published/SettingKey",
+  WebGalleryByKey:ApiEndPoints.baseUrl1+"/webgallery/listbyKey",
+  BannerByKey:ApiEndPoints.baseUrl1+"/banners/list/bykey",
+  NoticeByKey:ApiEndPoints.baseUrl1+"/noticepopup/list/SettingKey"
 };
